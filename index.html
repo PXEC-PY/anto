@@ -1,0 +1,718 @@
+<title>Práctica de Recursos Humanos</title>
+<style>
+  :root{
+    --bg:#EFF5FC;
+    --surface:#FFFFFF;
+    --surface-alt:#E3EEFC;
+    --border:#C9DCF2;
+    --ink:#0E2A4A;
+    --ink-soft:#52678A;
+    --primary:#1B5FAE;
+    --primary-dark:#0F3E76;
+    --primary-tint:#DCEBFB;
+    --success:#1F8A5F;
+    --success-tint:#DDF3E7;
+    --error:#C4423A;
+    --error-tint:#FBE1DF;
+    --shadow: 0 1px 2px rgba(14,42,74,.06), 0 8px 24px rgba(14,42,74,.08);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#081422;
+      --surface:#0F2036;
+      --surface-alt:#14263F;
+      --border:#20395C;
+      --ink:#E7F0FC;
+      --ink-soft:#9BB0CE;
+      --primary:#5B9BE0;
+      --primary-dark:#8FBBEC;
+      --primary-tint:#152A46;
+      --success:#3FBE85;
+      --success-tint:#123423;
+      --error:#E2695F;
+      --error-tint:#3A1917;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#081422; --surface:#0F2036; --surface-alt:#14263F; --border:#20395C;
+    --ink:#E7F0FC; --ink-soft:#9BB0CE; --primary:#5B9BE0; --primary-dark:#8FBBEC;
+    --primary-tint:#152A46; --success:#3FBE85; --success-tint:#123423;
+    --error:#E2695F; --error-tint:#3A1917; color-scheme: dark;
+  }
+  :root[data-theme="light"]{
+    --bg:#EFF5FC; --surface:#FFFFFF; --surface-alt:#E3EEFC; --border:#C9DCF2;
+    --ink:#0E2A4A; --ink-soft:#52678A; --primary:#1B5FAE; --primary-dark:#0F3E76;
+    --primary-tint:#DCEBFB; --success:#1F8A5F; --success-tint:#DDF3E7;
+    --error:#C4423A; --error-tint:#FBE1DF; color-scheme: light;
+  }
+
+  *{ box-sizing:border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    padding: clamp(12px, 4vw, 32px) 12px 48px;
+  }
+  .serif{ font-family: "Iowan Old Style","Palatino Linotype", Palatino, Georgia, "Times New Roman", serif; }
+  .mono{ font-family: "SF Mono","Cascadia Code", Consolas, "Roboto Mono", monospace; font-variant-numeric: tabular-nums; }
+
+  .app{ width:100%; max-width:460px; display:flex; flex-direction:column; gap:16px; }
+
+  header.top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  header.top .titles h1{
+    font-size: clamp(1.5rem, 5vw, 1.9rem);
+    margin:0 0 4px; font-weight:600; letter-spacing:-.01em;
+    text-wrap: balance;
+  }
+  header.top .titles p{ margin:0; color:var(--ink-soft); font-size:.88rem; }
+  .icon-btn{
+    border:1px solid var(--border); background:var(--surface); color:var(--ink-soft);
+    width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center;
+    cursor:pointer; flex-shrink:0; transition: transform .15s ease, background .15s ease, color .15s ease;
+  }
+  .icon-btn:hover{ color:var(--primary); }
+  .icon-btn:active{ transform: scale(.92); }
+  .icon-btn:focus-visible{ outline:2px solid var(--primary); outline-offset:2px; }
+
+  /* ---- stat rail ---- */
+  .stat-rail{
+    display:flex; align-items:center; gap:14px;
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:10px 14px; box-shadow: var(--shadow);
+  }
+  .stat{ display:flex; flex-direction:column; gap:2px; }
+  .stat .label{ font-size:.65rem; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); }
+  .stat .value{ font-size:1.05rem; font-weight:700; color:var(--primary-dark); }
+  .stat-rail .divider{ width:1px; align-self:stretch; background:var(--border); }
+  .progress-wrap{ flex:1; display:flex; flex-direction:column; gap:5px; }
+  .progress-wrap .label{ font-size:.65rem; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-soft); display:flex; justify-content:space-between; }
+  .progress-track{ height:8px; border-radius:999px; background:var(--surface-alt); overflow:hidden; }
+  .progress-fill{ height:100%; border-radius:999px; background: linear-gradient(90deg, var(--primary), var(--primary-dark)); transition: width .45s cubic-bezier(.4,0,.2,1); }
+
+  /* ---- mode select screen ---- */
+  .mode-screen{ display:flex; flex-direction:column; gap:14px; }
+  .mode-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:16px;
+    padding:18px; box-shadow: var(--shadow); display:flex; flex-direction:column; gap:10px;
+  }
+  .mode-card h2{ margin:0; font-size:1.05rem; }
+  .mode-card p{ margin:0; color:var(--ink-soft); font-size:.86rem; line-height:1.45; }
+  .mode-options{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
+  .mode-btn{
+    border:1.5px solid var(--border); background:var(--surface-alt); color:var(--ink);
+    border-radius:12px; padding:14px 10px; cursor:pointer; text-align:left;
+    display:flex; flex-direction:column; gap:4px; transition: border-color .15s ease, transform .1s ease, background .15s ease;
+  }
+  .mode-btn strong{ font-size:.95rem; }
+  .mode-btn span{ font-size:.78rem; color:var(--ink-soft); }
+  .mode-btn:hover{ border-color:var(--primary); }
+  .mode-btn:active{ transform: scale(.98); }
+  .mode-btn.selected{ border-color:var(--primary); background:var(--primary-tint); }
+  .mode-btn:focus-visible{ outline:2px solid var(--primary); outline-offset:2px; }
+  .best-score{ font-size:.8rem; color:var(--ink-soft); }
+  .best-score strong{ color:var(--primary-dark); }
+
+  .start-btn{
+    background:var(--primary); color:#fff; border:none; border-radius:12px;
+    padding:14px; font-size:1rem; font-weight:600; cursor:pointer;
+    transition: background .15s ease, transform .1s ease;
+  }
+  .start-btn:hover{ background:var(--primary-dark); }
+  .start-btn:active{ transform: scale(.98); }
+  .start-btn:focus-visible{ outline:2px solid var(--primary-dark); outline-offset:2px; }
+
+  /* ---- flashcard ---- */
+  .card{
+    background:var(--surface); border:1px solid var(--border); border-radius:18px;
+    padding:22px 20px; box-shadow: var(--shadow);
+    display:flex; flex-direction:column; gap:16px;
+    animation: cardIn .32s cubic-bezier(.2,.8,.2,1);
+  }
+  @keyframes cardIn{ from{ opacity:0; transform: translateY(10px) scale(.98); } to{ opacity:1; transform:none; } }
+  @media (prefers-reduced-motion: reduce){ .card{ animation:none; } }
+
+  .eyebrow{
+    display:inline-flex; align-self:flex-start; align-items:center; gap:6px;
+    font-size:.68rem; text-transform:uppercase; letter-spacing:.07em; font-weight:700;
+    color:var(--primary-dark); background:var(--primary-tint); padding:5px 10px; border-radius:999px;
+  }
+  .question-text{ font-size:1.14rem; line-height:1.5; margin:0; text-wrap: balance; }
+
+  .options{ display:flex; flex-direction:column; gap:9px; }
+  .option{
+    text-align:left; border:1.5px solid var(--border); background:var(--surface-alt);
+    color:var(--ink); border-radius:12px; padding:12px 14px; font-size:.95rem;
+    cursor:pointer; transition: border-color .15s ease, background .18s ease, transform .1s ease;
+    display:flex; align-items:center; gap:10px;
+  }
+  .option .letter{
+    width:22px; height:22px; border-radius:7px; background:var(--surface); border:1px solid var(--border);
+    display:flex; align-items:center; justify-content:center; font-size:.72rem; font-weight:700; color:var(--ink-soft);
+    flex-shrink:0;
+  }
+  .option:hover:not(:disabled){ border-color:var(--primary); }
+  .option:active:not(:disabled){ transform: scale(.99); }
+  .option:focus-visible{ outline:2px solid var(--primary); outline-offset:2px; }
+  .option:disabled{ cursor:default; }
+  .option.correct{ background:var(--success-tint); border-color:var(--success); }
+  .option.correct .letter{ background:var(--success); border-color:var(--success); color:#fff; }
+  .option.incorrect{ background:var(--error-tint); border-color:var(--error); animation: shake .32s; }
+  .option.incorrect .letter{ background:var(--error); border-color:var(--error); color:#fff; }
+  .option.dim{ opacity:.55; }
+  @keyframes shake{ 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-4px); } 75%{ transform:translateX(4px); } }
+  @media (prefers-reduced-motion: reduce){ .option.incorrect{ animation:none; } }
+
+  .card-actions{ display:flex; gap:10px; }
+  .btn{
+    flex:1; border-radius:12px; padding:12px 14px; font-size:.92rem; font-weight:600;
+    cursor:pointer; transition: background .15s ease, color .15s ease, transform .1s ease, border-color .15s ease;
+    border:1.5px solid var(--border); background:var(--surface); color:var(--ink);
+  }
+  .btn:active{ transform: scale(.98); }
+  .btn:focus-visible{ outline:2px solid var(--primary); outline-offset:2px; }
+  .btn.primary{ background:var(--primary); border-color:var(--primary); color:#fff; }
+  .btn.primary:hover{ background:var(--primary-dark); }
+  .btn:disabled{ opacity:.4; cursor:default; }
+
+  .reveal-box{
+    border-radius:12px; padding:12px 14px; font-size:.88rem; line-height:1.5;
+    background:var(--primary-tint); border:1px solid var(--border); color:var(--ink);
+    animation: revealIn .25s ease;
+  }
+  @keyframes revealIn{ from{ opacity:0; transform: translateY(-4px);} to{ opacity:1; transform:none; } }
+  .reveal-box strong{ color:var(--primary-dark); }
+  .self-grade{ display:flex; gap:10px; margin-top:10px; }
+  .self-grade button{ flex:1; }
+
+  /* ---- summary ---- */
+  .summary{
+    background:var(--surface); border:1px solid var(--border); border-radius:18px;
+    padding:26px 22px; box-shadow: var(--shadow); text-align:center;
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+    animation: cardIn .35s cubic-bezier(.2,.8,.2,1);
+    position:relative; overflow:hidden;
+  }
+  .summary h2{ margin:0; font-size:1.3rem; }
+  .ring-wrap{ position:relative; width:150px; height:150px; }
+  .ring-wrap svg{ transform: rotate(-90deg); }
+  .ring-bg{ fill:none; stroke:var(--surface-alt); stroke-width:12; }
+  .ring-fg{ fill:none; stroke:var(--primary); stroke-width:12; stroke-linecap:round; transition: stroke-dashoffset 1s cubic-bezier(.2,.8,.2,1); }
+  .ring-label{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .ring-label .pct{ font-size:1.7rem; font-weight:700; color:var(--primary-dark); }
+  .ring-label .of{ font-size:.75rem; color:var(--ink-soft); }
+  .summary-stats{ display:flex; gap:22px; }
+  .summary-stats .s{ display:flex; flex-direction:column; align-items:center; gap:2px; }
+  .summary-stats .s .n{ font-size:1.2rem; font-weight:700; }
+  .summary-stats .s.correct .n{ color:var(--success); }
+  .summary-stats .s.incorrect .n{ color:var(--error); }
+  .summary-stats .s .l{ font-size:.7rem; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-soft); }
+  .summary-actions{ display:flex; gap:10px; width:100%; }
+  .missed{ width:100%; text-align:left; margin-top:6px; }
+  .missed summary{ cursor:pointer; font-size:.82rem; color:var(--ink-soft); }
+  .missed ul{ margin:8px 0 0; padding-left:18px; font-size:.82rem; color:var(--ink-soft); display:flex; flex-direction:column; gap:6px; }
+  #confetti{ position:absolute; inset:0; pointer-events:none; }
+
+  .hidden{ display:none !important; }
+</style>
+
+<div class="app">
+  <header class="top">
+    <div class="titles">
+      <h1 class="serif">Práctica de Recursos Humanos</h1>
+      <p id="subtitle">Reclutamiento · Capacitación · Auditoría · Evaluación del desempeño</p>
+    </div>
+    <button class="icon-btn" id="resetBtn" title="Reiniciar progreso" aria-label="Reiniciar progreso">↺</button>
+  </header>
+
+  <div class="stat-rail" id="statRail">
+    <div class="stat">
+      <span class="label">Puntos</span>
+      <span class="value mono" id="scoreVal">0</span>
+    </div>
+    <div class="divider"></div>
+    <div class="progress-wrap">
+      <span class="label"><span id="progLabel">Pregunta 0 de 0</span><span id="modeLabel" class="mono"></span></span>
+      <div class="progress-track"><div class="progress-fill" id="progFill" style="width:0%"></div></div>
+    </div>
+  </div>
+
+  <!-- MODE SELECT SCREEN -->
+  <section class="mode-screen" id="modeScreen">
+    <div class="mode-card">
+      <h2 class="serif">Elegí cómo estudiar</h2>
+      <p>21 preguntas de opción múltiple y verdadero/falso sobre gestión de personas.</p>
+      <div class="mode-options">
+        <button class="mode-btn selected" id="btnEstudio" data-mode="estudio">
+          <strong>Modo Estudio</strong>
+          <span>Preguntas en orden, sin apuro.</span>
+        </button>
+        <button class="mode-btn" id="btnExamen" data-mode="examen">
+          <strong>Modo Examen</strong>
+          <span>Orden aleatorio, se guarda tu mejor puntaje.</span>
+        </button>
+      </div>
+      <p class="best-score" id="bestScoreLine"></p>
+      <button class="start-btn" id="startBtn">Comenzar</button>
+    </div>
+  </section>
+
+  <!-- QUIZ SCREEN -->
+  <section id="quizScreen" class="hidden">
+    <div class="card" id="cardEl">
+      <span class="eyebrow" id="topicTag">Tema</span>
+      <p class="question-text serif" id="questionText"></p>
+      <div class="options" id="optionsWrap"></div>
+      <div id="revealWrap"></div>
+      <div class="card-actions">
+        <button class="btn" id="showAnswerBtn">Mostrar respuesta</button>
+        <button class="btn primary" id="nextBtn" disabled>Siguiente pregunta</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SUMMARY SCREEN -->
+  <section id="summaryScreen" class="hidden">
+    <div class="summary">
+      <canvas id="confetti"></canvas>
+      <h2 class="serif" id="summaryTitle">¡Terminaste!</h2>
+      <div class="ring-wrap">
+        <svg width="150" height="150" viewBox="0 0 150 150">
+          <circle class="ring-bg" cx="75" cy="75" r="63"></circle>
+          <circle class="ring-fg" id="ringFg" cx="75" cy="75" r="63" stroke-dasharray="396" stroke-dashoffset="396"></circle>
+        </svg>
+        <div class="ring-label">
+          <span class="pct mono" id="summaryPct">0%</span>
+          <span class="of">acierto</span>
+        </div>
+      </div>
+      <div class="summary-stats">
+        <div class="s correct"><span class="n mono" id="sumCorrect">0</span><span class="l">Correctas</span></div>
+        <div class="s incorrect"><span class="n mono" id="sumIncorrect">0</span><span class="l">Incorrectas</span></div>
+      </div>
+      <details class="missed" id="missedWrap">
+        <summary>Ver preguntas a repasar</summary>
+        <ul id="missedList"></ul>
+      </details>
+      <div class="summary-actions">
+        <button class="btn" id="changeModeBtn">Cambiar modo</button>
+        <button class="btn primary" id="retryBtn">Reintentar</button>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS = [
+    { id:1, topic:"Relaciones laborales", type:"mc",
+      q:"Una organización implementa reuniones periódicas y protocolos para resolver conflictos entre trabajadores y directivos. Esta acción corresponde principalmente a:",
+      options:["Relaciones laborales","Planeamiento de personal","Selección de personal","Auditoría de personal"], correct:0 },
+    { id:2, topic:"Fundamentos de RRHH", type:"tf",
+      q:"En el enfoque tradicional de Recursos Humanos, los trabajadores eran considerados socios estratégicos de la organización.",
+      options:["Verdadero","Falso"], correct:1 },
+    { id:3, topic:"Competencias", type:"tf",
+      q:"Las competencias técnicas se refieren a conocimientos y habilidades específicas necesarias para desempeñar un cargo.",
+      options:["Verdadero","Falso"], correct:0 },
+    { id:4, topic:"Competencias", type:"mc",
+      q:"Un colaborador posee excelentes conocimientos técnicos, pero presenta dificultades para trabajar en equipo y comunicarse con sus compañeros. ¿Qué tipo de competencias debería fortalecer principalmente?",
+      options:["Competencias conductuales","Competencias operativas","Competencias técnicas","Competencias financieras"], correct:0 },
+    { id:5, topic:"Análisis de puestos", type:"tf",
+      q:"El análisis de puestos constituye la base para los procesos de selección, capacitación y evaluación del desempeño.",
+      options:["Verdadero","Falso"], correct:0 },
+    { id:6, topic:"Planeamiento de RRHH", type:"mc",
+      q:"Una empresa prevé abrir dos nuevas sucursales el próximo año y comienza a estimar cuántos colaboradores necesitará contratar y capacitar para cubrir las nuevas posiciones. ¿A qué función de Recursos Humanos corresponde principalmente esta actividad?",
+      options:["Planeamiento de Recursos Humanos","Relaciones laborales","Evaluación del desempeño","Compensación y beneficios"], correct:0 },
+    { id:7, topic:"Seguridad social", type:"tf",
+      q:"Los sistemas de seguridad social pueden clasificarse en sistemas públicos y sistemas privados.",
+      options:["Verdadero","Falso"], correct:0 },
+    { id:8, topic:"Gestión del cambio", type:"mc",
+      q:"Los colaboradores manifiestan preocupación ante la implementación de nuevas tecnologías en la organización. ¿Cuál sería la estrategia más adecuada para reducir la resistencia al cambio?",
+      options:["Aplicar sanciones disciplinarias.","Mejorar la comunicación y ofrecer capacitación.","Sustituir a los trabajadores que manifiesten dudas.","Evitar brindar información hasta finalizar el proceso."], correct:1 },
+    { id:9, topic:"Inducción", type:"mc",
+      q:"Una empresa incorpora un nuevo colaborador y durante su primera semana le presenta la misión, visión, normas internas y funciones del cargo. ¿A qué proceso corresponde esta actividad?",
+      options:["Capacitación","Evaluación del desempeño","Inducción","Reclutamiento"], correct:2 },
+    { id:10, topic:"Balance social", type:"tf",
+      q:"El balance social permite evaluar las relaciones de la organización con empleados, clientes, proveedores, accionistas y comunidad.",
+      options:["Verdadero","Falso"], correct:0 },
+    { id:11, topic:"Reclutamiento", type:"mc",
+      q:"Una organización decide cubrir una vacante promocionando a un colaborador que ya trabaja dentro de la empresa. ¿Qué tipo de reclutamiento está utilizando?",
+      options:["Reclutamiento externo","Reclutamiento mixto","Reclutamiento interno","Reclutamiento estratégico"], correct:2 },
+    { id:12, topic:"Evaluación del desempeño", type:"tf",
+      q:"La evaluación del desempeño tiene como objetivo principal sancionar a los trabajadores con bajo rendimiento.",
+      options:["Verdadero","Falso"], correct:1 },
+    { id:13, topic:"Fundamentos de RRHH", type:"tf",
+      q:"La gestión estratégica de Recursos Humanos busca alinear las políticas y prácticas de personal con los objetivos organizacionales.",
+      options:["Verdadero","Falso"], correct:0 },
+    { id:14, topic:"Capacitación", type:"mc",
+      q:"Una empresa detecta que sus trabajadores tienen dificultades para utilizar un nuevo sistema informático y organiza talleres para mejorar dichas habilidades. ¿Qué proceso de Recursos Humanos está desarrollando?",
+      options:["Auditoría de personal","Seguridad social","Capacitación","Reclutamiento"], correct:2 },
+    { id:15, topic:"Selección", type:"mc",
+      q:"Durante el proceso de selección, una empresa aplica entrevistas, pruebas psicotécnicas y verifica referencias laborales. ¿Cuál es el objetivo principal de estas actividades?",
+      options:["Evaluar el clima organizacional","Capacitar al personal nuevo","Elegir al candidato con mayor adecuación al puesto y la organización.","Reducir costos salariales."], correct:2 },
+    { id:16, topic:"Auditoría", type:"mc",
+      q:"Una organización revisa periódicamente los accesos y permisos de sus empleados a los sistemas informáticos para verificar que se ajusten a sus funciones. ¿A qué proceso corresponde esta actividad?",
+      options:["Auditoría de personas en sistemas de información","Inducción organizacional","Evaluación del desempeño","Seguridad social"], correct:0 },
+    { id:17, topic:"Seguridad e higiene", type:"tf",
+      q:"La seguridad e higiene ocupacional busca prevenir accidentes y enfermedades laborales.",
+      options:["Verdadero","Falso"], correct:0 },
+    { id:18, topic:"Gestión del cambio", type:"tf",
+      q:"La resistencia al cambio se produce únicamente porque las personas se oponen a cualquier tipo de innovación.",
+      options:["Verdadero","Falso"], correct:1 },
+    { id:19, topic:"Evaluación del desempeño", type:"mc",
+      q:"Una empresa evalúa a un supervisor mediante la opinión de superiores, compañeros, subordinados y clientes internos. ¿Qué tipo de evaluación está utilizando?",
+      options:["Evaluación funcional","Evaluación por antigüedad","Evaluación tradicional","Evaluación 360°"], correct:3 },
+    { id:20, topic:"Auditoría", type:"tf",
+      q:"La auditoría de Recursos Humanos posee exclusivamente un carácter punitivo y fiscalizador.",
+      options:["Verdadero","Falso"], correct:1 },
+    { id:21, topic:"Inducción", type:"tf",
+      q:"La inducción tiene como finalidad facilitar la adaptación del nuevo colaborador a la organización y reducir su incertidumbre inicial.",
+      options:["Verdadero","Falso"], correct:0 }
+  ];
+
+  var STORAGE_KEY = "rrhhPractica_v1";
+  var BEST_KEY = "rrhhPractica_bestExamen";
+
+  var els = {};
+  ["modeScreen","quizScreen","summaryScreen","btnEstudio","btnExamen","startBtn","bestScoreLine",
+   "scoreVal","progLabel","modeLabel","progFill","topicTag","questionText","optionsWrap","revealWrap",
+   "showAnswerBtn","nextBtn","resetBtn","cardEl","summaryTitle","ringFg","summaryPct","sumCorrect",
+   "sumIncorrect","missedList","changeModeBtn","retryBtn","confetti","subtitle"
+  ].forEach(function(id){ els[id] = document.getElementById(id); });
+
+  var state = null;
+
+  function shuffle(arr){
+    var a = arr.slice();
+    for (var i = a.length - 1; i > 0; i--){
+      var j = Math.floor(Math.random() * (i + 1));
+      var t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function freshState(mode){
+    var order = QUESTIONS.map(function(q, i){ return i; });
+    if (mode === "examen") order = shuffle(order);
+    return {
+      mode: mode,
+      order: order,
+      pos: 0,
+      score: 0,
+      correctCount: 0,
+      incorrectCount: 0,
+      missed: [],
+      answeredThis: false,
+      selection: null,
+      revealedOnly: false,
+      finished: false
+    };
+  }
+
+  function save(){
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
+  }
+  function load(){
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      return raw ? JSON.parse(raw) : null;
+    } catch(e){ return null; }
+  }
+  function clearSave(){
+    try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
+  }
+  function getBest(){
+    try { return parseInt(localStorage.getItem(BEST_KEY) || "0", 10); } catch(e){ return 0; }
+  }
+  function setBest(v){
+    try { localStorage.setItem(BEST_KEY, String(v)); } catch(e){}
+  }
+
+  function showScreen(name){
+    els.modeScreen.classList.toggle("hidden", name !== "mode");
+    els.quizScreen.classList.toggle("hidden", name !== "quiz");
+    els.summaryScreen.classList.toggle("hidden", name !== "summary");
+  }
+
+  function renderStatRail(){
+    var total = QUESTIONS.length;
+    var pos = state ? Math.min(state.pos, total) : 0;
+    els.scoreVal.textContent = state ? state.score : 0;
+    els.progLabel.textContent = "Pregunta " + Math.min(pos + 1, total) + " de " + total;
+    if (state && state.finished) els.progLabel.textContent = "Completado " + total + "/" + total;
+    els.modeLabel.textContent = state ? (state.mode === "examen" ? "EXAMEN" : "ESTUDIO") : "";
+    var pct = state ? (pos / total) * 100 : 0;
+    els.progFill.style.width = pct + "%";
+  }
+
+  function currentQuestion(){
+    var idx = state.order[state.pos];
+    return QUESTIONS[idx];
+  }
+
+  function renderMode(){
+    els.btnEstudio.classList.toggle("selected", pendingMode === "estudio");
+    els.btnExamen.classList.toggle("selected", pendingMode === "examen");
+    var best = getBest();
+    els.bestScoreLine.textContent = best > 0
+      ? "Tu mejor puntaje en Modo Examen: " + best + " / " + QUESTIONS.length
+      : "";
+  }
+
+  var pendingMode = "estudio";
+
+  function renderQuiz(){
+    var q = currentQuestion();
+    els.topicTag.textContent = q.topic;
+    els.questionText.textContent = q.q;
+    els.optionsWrap.innerHTML = "";
+    els.revealWrap.innerHTML = "";
+    els.nextBtn.disabled = true;
+    els.showAnswerBtn.disabled = state.answeredThis;
+
+    var letters = ["A","B","C","D"];
+    q.options.forEach(function(optText, i){
+      var btn = document.createElement("button");
+      btn.className = "option";
+      btn.setAttribute("data-idx", i);
+      var letterSpan = document.createElement("span");
+      letterSpan.className = "letter";
+      letterSpan.textContent = q.type === "tf" ? (i === 0 ? "V" : "F") : letters[i];
+      var textSpan = document.createElement("span");
+      textSpan.textContent = optText;
+      btn.appendChild(letterSpan);
+      btn.appendChild(textSpan);
+
+      if (state.answeredThis){
+        btn.disabled = true;
+        if (i === q.correct) btn.classList.add("correct");
+        else if (i === state.selection) btn.classList.add("incorrect");
+        else btn.classList.add("dim");
+      }
+      btn.addEventListener("click", function(){ onSelectOption(i); });
+      els.optionsWrap.appendChild(btn);
+    });
+
+    if (state.answeredThis){
+      if (state.revealedOnly){
+        var box = document.createElement("div");
+        box.className = "reveal-box";
+        box.innerHTML = "<strong>Respuesta correcta:</strong> " + q.options[q.correct] +
+          "<div class='self-grade'></div>";
+        els.revealWrap.appendChild(box);
+        var grade = box.querySelector(".self-grade");
+        var yes = document.createElement("button");
+        yes.className = "btn"; yes.textContent = "Lo sabía ✓";
+        var no = document.createElement("button");
+        no.className = "btn"; no.textContent = "No lo sabía ✕";
+        yes.addEventListener("click", function(){ selfGrade(true); });
+        no.addEventListener("click", function(){ selfGrade(false); });
+        grade.appendChild(yes); grade.appendChild(no);
+      } else {
+        var correct = state.selection === q.correct;
+        var box2 = document.createElement("div");
+        box2.className = "reveal-box";
+        box2.style.background = correct ? "var(--success-tint)" : "var(--error-tint)";
+        box2.innerHTML = correct
+          ? "<strong>¡Correcto!</strong> " + q.options[q.correct]
+          : "<strong>Incorrecto.</strong> La respuesta correcta es: " + q.options[q.correct];
+        els.revealWrap.appendChild(box2);
+        els.nextBtn.disabled = false;
+      }
+    }
+    renderStatRail();
+  }
+
+  function onSelectOption(i){
+    if (state.answeredThis) return;
+    var q = currentQuestion();
+    state.answeredThis = true;
+    state.selection = i;
+    state.revealedOnly = false;
+    if (i === q.correct){
+      state.score += 1;
+      state.correctCount += 1;
+    } else {
+      state.incorrectCount += 1;
+      state.missed.push(q);
+    }
+    save();
+    renderQuiz();
+    els.nextBtn.disabled = false;
+  }
+
+  function onShowAnswer(){
+    if (state.answeredThis) return;
+    state.answeredThis = true;
+    state.revealedOnly = true;
+    state.selection = null;
+    save();
+    renderQuiz();
+  }
+
+  function selfGrade(knewIt){
+    var q = currentQuestion();
+    if (knewIt){
+      state.score += 1;
+      state.correctCount += 1;
+    } else {
+      state.incorrectCount += 1;
+      state.missed.push(q);
+    }
+    els.nextBtn.disabled = false;
+    save();
+    renderQuiz();
+  }
+
+  function onNext(){
+    state.pos += 1;
+    state.answeredThis = false;
+    state.selection = null;
+    state.revealedOnly = false;
+    if (state.pos >= state.order.length){
+      state.finished = true;
+      finish();
+      return;
+    }
+    save();
+    renderQuiz();
+  }
+
+  function finish(){
+    save();
+    if (state.mode === "examen"){
+      var best = getBest();
+      if (state.score > best) setBest(state.score);
+    }
+    renderSummary();
+    showScreen("summary");
+  }
+
+  function renderSummary(){
+    var total = QUESTIONS.length;
+    var pct = Math.round((state.correctCount / total) * 100);
+    els.summaryTitle.textContent = pct >= 80 ? "¡Excelente trabajo!" : pct >= 50 ? "¡Buen intento!" : "Sigamos practicando";
+    els.summaryPct.textContent = pct + "%";
+    els.sumCorrect.textContent = state.correctCount;
+    els.sumIncorrect.textContent = state.incorrectCount;
+    var circumference = 396;
+    var offset = circumference - (circumference * pct / 100);
+    els.ringFg.style.strokeDashoffset = String(circumference);
+    requestAnimationFrame(function(){
+      els.ringFg.style.strokeDashoffset = String(offset);
+    });
+    els.missedList.innerHTML = "";
+    if (state.missed.length === 0){
+      els.missedWrap.classList.add("hidden");
+    } else {
+      els.missedWrap.classList.remove("hidden");
+      state.missed.forEach(function(q){
+        var li = document.createElement("li");
+        li.textContent = q.q + " → " + q.options[q.correct];
+        els.missedList.appendChild(li);
+      });
+    }
+    renderStatRail();
+    if (pct >= 80 && !window.matchMedia("(prefers-reduced-motion: reduce)").matches){
+      runConfetti();
+    }
+  }
+
+  function runConfetti(){
+    var canvas = els.confetti;
+    var wrap = canvas.parentElement;
+    var rect = wrap.getBoundingClientRect();
+    canvas.width = rect.width; canvas.height = rect.height;
+    var ctx = canvas.getContext("2d");
+    var colors = ["#1B5FAE","#5B9BE0","#1F8A5F","#DCEBFB"];
+    var particles = [];
+    for (var i = 0; i < 50; i++){
+      particles.push({
+        x: Math.random() * canvas.width,
+        y: -10 - Math.random() * 60,
+        r: 3 + Math.random() * 3,
+        c: colors[Math.floor(Math.random() * colors.length)],
+        vy: 2 + Math.random() * 2,
+        vx: (Math.random() - 0.5) * 2,
+        rot: Math.random() * Math.PI
+      });
+    }
+    var start = Date.now();
+    function tick(){
+      var elapsed = Date.now() - start;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(function(p){
+        p.y += p.vy; p.x += p.vx; p.rot += 0.05;
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.fillStyle = p.c;
+        ctx.fillRect(-p.r, -p.r, p.r * 2, p.r * 2);
+        ctx.restore();
+      });
+      if (elapsed < 1800){
+        requestAnimationFrame(tick);
+      } else {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+      }
+    }
+    tick();
+  }
+
+  function startQuiz(mode){
+    state = freshState(mode);
+    save();
+    showScreen("quiz");
+    renderQuiz();
+  }
+
+  function resumeIfAny(){
+    var saved = load();
+    if (saved && !saved.finished){
+      state = saved;
+      showScreen("quiz");
+      renderQuiz();
+      return true;
+    }
+    return false;
+  }
+
+  els.btnEstudio.addEventListener("click", function(){ pendingMode = "estudio"; renderMode(); });
+  els.btnExamen.addEventListener("click", function(){ pendingMode = "examen"; renderMode(); });
+  els.startBtn.addEventListener("click", function(){ startQuiz(pendingMode); });
+  els.showAnswerBtn.addEventListener("click", onShowAnswer);
+  els.nextBtn.addEventListener("click", onNext);
+  els.resetBtn.addEventListener("click", function(){
+    clearSave();
+    state = null;
+    pendingMode = "estudio";
+    renderMode();
+    showScreen("mode");
+    renderStatRail();
+  });
+  els.changeModeBtn.addEventListener("click", function(){
+    clearSave();
+    state = null;
+    renderMode();
+    showScreen("mode");
+    renderStatRail();
+  });
+  els.retryBtn.addEventListener("click", function(){
+    startQuiz(state.mode);
+  });
+
+  if (!resumeIfAny()){
+    renderMode();
+    showScreen("mode");
+  }
+  renderStatRail();
+})();
+</script>
