@@ -196,6 +196,12 @@
   .option.incorrect{ background:var(--error-tint); border-color:var(--error); animation: shake .32s; }
   .option.incorrect .letter{ background:var(--error); border-color:var(--error); color:#fff; }
   .option.dim{ opacity:.55; }
+  .fill-input{
+    border:1.5px solid var(--border); background:var(--surface-alt); color:var(--ink);
+    border-radius:12px; padding:12px 14px; font-size:.94rem; font-family:inherit; width:100%;
+  }
+  .fill-input:focus{ outline:2px solid var(--primary); outline-offset:2px; border-color:var(--primary); }
+  .fill-input:disabled{ opacity:.7; }
   @keyframes shake{ 0%,100%{ transform:translateX(0); } 25%{ transform:translateX(-4px); } 75%{ transform:translateX(4px); } }
   @media (prefers-reduced-motion: reduce){ .option.incorrect{ animation:none; } }
 
@@ -772,6 +778,7 @@
       answered: false, revealedOnly: false,
       selection: null,      // for single
       multiSelection: [],   // for multi
+      fillText: "",         // for fill
       confirmed: false
     };
     showScreen("quiz");
@@ -807,6 +814,7 @@
     if (q.type === "fill"){
       els.showAnswerBtn.textContent = "Mostrar respuesta";
       els.showAnswerBtn.disabled = state.answered;
+      renderFillInput(q);
     } else if (q.type === "multi"){
       els.showAnswerBtn.textContent = state.answered ? "Mostrar respuesta" : "Confirmar selección";
       els.showAnswerBtn.disabled = state.answered;
@@ -847,6 +855,21 @@
       }
       els.optionsWrap.appendChild(btn);
     });
+  }
+
+  function renderFillInput(q){
+    var input = document.createElement("input");
+    input.type = "text";
+    input.className = "fill-input";
+    input.placeholder = "Escribí tu respuesta aquí...";
+    input.autocomplete = "off";
+    input.autocapitalize = "off";
+    input.spellcheck = false;
+    input.value = state.fillText || "";
+    input.disabled = state.answered;
+    input.addEventListener("input", function(){ state.fillText = input.value; });
+    els.optionsWrap.appendChild(input);
+    if (!state.answered) input.focus();
   }
 
   function renderMultiOptions(q){
@@ -974,6 +997,7 @@
     state.answered = false;
     state.selection = null;
     state.multiSelection = [];
+    state.fillText = "";
     state.revealedOnly = false;
     if (state.pos >= state.questions.length){
       finish();
