@@ -779,6 +779,7 @@
       selection: null,      // for single
       multiSelection: [],   // for multi
       fillText: "",         // for fill
+      graded: false, gradedKnewIt: false, // self-grade for revealed answers
       confirmed: false
     };
     showScreen("quiz");
@@ -954,16 +955,24 @@
         (q.type === "multi" ? q.correct.map(function(i){ return q.options[i]; }).join(" · ") : q.options[q.correct]);
       var box = document.createElement("div");
       box.className = "reveal-box";
-      box.innerHTML = "<strong>Respuesta correcta:</strong> " + escapeHtml(answerLabel) + "<div class='self-grade'></div>";
-      els.revealWrap.appendChild(box);
-      var grade = box.querySelector(".self-grade");
-      var yes = document.createElement("button");
-      yes.className = "btn"; yes.textContent = "Lo sabía ✓";
-      var no = document.createElement("button");
-      no.className = "btn"; no.textContent = "No lo sabía ✕";
-      yes.addEventListener("click", function(){ selfGrade(true, q); });
-      no.addEventListener("click", function(){ selfGrade(false, q); });
-      grade.appendChild(yes); grade.appendChild(no);
+      if (state.graded){
+        box.style.background = state.gradedKnewIt ? "var(--success-tint)" : "var(--error-tint)";
+        box.innerHTML = "<strong>Respuesta correcta:</strong> " + escapeHtml(answerLabel) +
+          "<div style='margin-top:8px'>" + (state.gradedKnewIt ? "Marcado como: lo sabía ✓" : "Marcado como: no lo sabía ✕") + "</div>";
+        els.revealWrap.appendChild(box);
+        els.nextBtn.disabled = false;
+      } else {
+        box.innerHTML = "<strong>Respuesta correcta:</strong> " + escapeHtml(answerLabel) + "<div class='self-grade'></div>";
+        els.revealWrap.appendChild(box);
+        var grade = box.querySelector(".self-grade");
+        var yes = document.createElement("button");
+        yes.className = "btn"; yes.textContent = "Lo sabía ✓";
+        var no = document.createElement("button");
+        no.className = "btn"; no.textContent = "No lo sabía ✕";
+        yes.addEventListener("click", function(){ selfGrade(true, q); });
+        no.addEventListener("click", function(){ selfGrade(false, q); });
+        grade.appendChild(yes); grade.appendChild(no);
+      }
     } else {
       var correct;
       if (q.type === "multi"){
@@ -986,9 +995,10 @@
   }
 
   function selfGrade(knewIt, q){
+    state.graded = true;
+    state.gradedKnewIt = knewIt;
     if (knewIt){ state.score += 1; state.correctCount += 1; }
     else { state.incorrectCount += 1; state.missed.push(q); }
-    els.nextBtn.disabled = false;
     renderQuiz();
   }
 
@@ -999,6 +1009,8 @@
     state.multiSelection = [];
     state.fillText = "";
     state.revealedOnly = false;
+    state.graded = false;
+    state.gradedKnewIt = false;
     if (state.pos >= state.questions.length){
       finish();
       return;
