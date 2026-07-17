@@ -14,6 +14,8 @@
     --success-tint:#DDF3E7;
     --error:#C4423A;
     --error-tint:#FBE1DF;
+    --gold:#B4790C;
+    --gold-tint:#FBF0DC;
     --shadow: 0 1px 2px rgba(14,42,74,.06), 0 8px 24px rgba(14,42,74,.08);
     color-scheme: light;
   }
@@ -32,6 +34,8 @@
       --success-tint:#123423;
       --error:#E2695F;
       --error-tint:#3A1917;
+      --gold:#E0AC4C;
+      --gold-tint:#332309;
       --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.35);
       color-scheme: dark;
     }
@@ -40,13 +44,13 @@
     --bg:#081422; --surface:#0F2036; --surface-alt:#14263F; --border:#20395C;
     --ink:#E7F0FC; --ink-soft:#9BB0CE; --primary:#5B9BE0; --primary-dark:#8FBBEC;
     --primary-tint:#152A46; --success:#3FBE85; --success-tint:#123423;
-    --error:#E2695F; --error-tint:#3A1917; color-scheme: dark;
+    --error:#E2695F; --error-tint:#3A1917; --gold:#E0AC4C; --gold-tint:#332309; color-scheme: dark;
   }
   :root[data-theme="light"]{
     --bg:#EFF5FC; --surface:#FFFFFF; --surface-alt:#E3EEFC; --border:#C9DCF2;
     --ink:#0E2A4A; --ink-soft:#52678A; --primary:#1B5FAE; --primary-dark:#0F3E76;
     --primary-tint:#DCEBFB; --success:#1F8A5F; --success-tint:#DDF3E7;
-    --error:#C4423A; --error-tint:#FBE1DF; color-scheme: light;
+    --error:#C4423A; --error-tint:#FBE1DF; --gold:#B4790C; --gold-tint:#FBF0DC; color-scheme: light;
   }
 
   *{ box-sizing:border-box; }
@@ -63,19 +67,21 @@
   .serif{ font-family: "Iowan Old Style","Palatino Linotype", Palatino, Georgia, "Times New Roman", serif; }
   .mono{ font-family: "SF Mono","Cascadia Code", Consolas, "Roboto Mono", monospace; font-variant-numeric: tabular-nums; }
 
-  .app{ width:100%; max-width:460px; display:flex; flex-direction:column; gap:16px; }
+  .app{ width:100%; max-width:480px; display:flex; flex-direction:column; gap:16px; }
 
   header.top{ display:flex; align-items:flex-start; justify-content:space-between; gap:12px; }
+  header.top .titles{ display:flex; align-items:center; gap:10px; }
   header.top .titles h1{
-    font-size: clamp(1.5rem, 5vw, 1.9rem);
-    margin:0 0 4px; font-weight:600; letter-spacing:-.01em;
+    font-size: clamp(1.35rem, 5vw, 1.7rem);
+    margin:0 0 2px; font-weight:600; letter-spacing:-.01em;
     text-wrap: balance;
   }
-  header.top .titles p{ margin:0; color:var(--ink-soft); font-size:.88rem; }
+  header.top .titles p{ margin:0; color:var(--ink-soft); font-size:.85rem; }
   .icon-btn{
     border:1px solid var(--border); background:var(--surface); color:var(--ink-soft);
     width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center;
     cursor:pointer; flex-shrink:0; transition: transform .15s ease, background .15s ease, color .15s ease;
+    font-size:1.05rem;
   }
   .icon-btn:hover{ color:var(--primary); }
   .icon-btn:active{ transform: scale(.92); }
@@ -96,37 +102,57 @@
   .progress-track{ height:8px; border-radius:999px; background:var(--surface-alt); overflow:hidden; }
   .progress-fill{ height:100%; border-radius:999px; background: linear-gradient(90deg, var(--primary), var(--primary-dark)); transition: width .45s cubic-bezier(.4,0,.2,1); }
 
-  /* ---- mode select screen ---- */
-  .mode-screen{ display:flex; flex-direction:column; gap:14px; }
-  .mode-card{
-    background:var(--surface); border:1px solid var(--border); border-radius:16px;
-    padding:18px; box-shadow: var(--shadow); display:flex; flex-direction:column; gap:10px;
-  }
-  .mode-card h2{ margin:0; font-size:1.05rem; }
-  .mode-card p{ margin:0; color:var(--ink-soft); font-size:.86rem; line-height:1.45; }
-  .mode-options{ display:grid; grid-template-columns: 1fr 1fr; gap:10px; }
-  .mode-btn{
-    border:1.5px solid var(--border); background:var(--surface-alt); color:var(--ink);
-    border-radius:12px; padding:14px 10px; cursor:pointer; text-align:left;
-    display:flex; flex-direction:column; gap:4px; transition: border-color .15s ease, transform .1s ease, background .15s ease;
-  }
-  .mode-btn strong{ font-size:.95rem; }
-  .mode-btn span{ font-size:.78rem; color:var(--ink-soft); }
-  .mode-btn:hover{ border-color:var(--primary); }
-  .mode-btn:active{ transform: scale(.98); }
-  .mode-btn.selected{ border-color:var(--primary); background:var(--primary-tint); }
-  .mode-btn:focus-visible{ outline:2px solid var(--primary); outline-offset:2px; }
-  .best-score{ font-size:.8rem; color:var(--ink-soft); }
-  .best-score strong{ color:var(--primary-dark); }
+  /* ---- home screen ---- */
+  .home-screen{ display:flex; flex-direction:column; gap:10px; }
+  .section-title{ font-size:.74rem; font-weight:700; color:var(--ink-soft); text-transform:uppercase; letter-spacing:.07em; margin: 14px 2px 0; }
+  .section-title:first-child{ margin-top:2px; }
+  .section-hint{ margin: -4px 2px 4px; font-size:.8rem; color:var(--ink-soft); line-height:1.4; }
 
-  .start-btn{
-    background:var(--primary); color:#fff; border:none; border-radius:12px;
-    padding:14px; font-size:1rem; font-weight:600; cursor:pointer;
-    transition: background .15s ease, transform .1s ease;
+  .week-grid{ display:flex; flex-direction:column; gap:9px; }
+  .week-card{
+    background:var(--surface); border:1px solid var(--border); border-radius:14px;
+    padding:12px 14px; display:flex; align-items:center; gap:12px; cursor:pointer;
+    box-shadow: var(--shadow); transition: transform .1s ease, border-color .15s ease;
+    text-align:left; width:100%; color:var(--ink); font: inherit;
   }
-  .start-btn:hover{ background:var(--primary-dark); }
-  .start-btn:active{ transform: scale(.98); }
-  .start-btn:focus-visible{ outline:2px solid var(--primary-dark); outline-offset:2px; }
+  .week-card:hover{ border-color:var(--primary); }
+  .week-card:active{ transform: scale(.99); }
+  .week-card:focus-visible{ outline:2px solid var(--primary); outline-offset:2px; }
+  .wk-num{
+    width:38px; height:38px; border-radius:10px; background:var(--primary-tint); color:var(--primary-dark);
+    display:flex; align-items:center; justify-content:center; font-weight:700; flex-shrink:0; font-size:.95rem;
+  }
+  .wk-info{ flex:1; min-width:0; display:flex; flex-direction:column; gap:1px; }
+  .wk-info strong{ font-size:.88rem; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .wk-info span{ font-size:.74rem; color:var(--ink-soft); }
+  .wk-meta{ font-size:.72rem; color:var(--ink-soft); text-align:right; white-space:nowrap; flex-shrink:0; }
+  .wk-meta strong{ color:var(--success); display:block; }
+
+  .combo-card{
+    background:var(--surface); border:1.5px solid var(--border); border-radius:16px;
+    padding:16px; box-shadow: var(--shadow); display:flex; flex-direction:column; gap:8px;
+  }
+  .combo-card h2{ margin:0; font-size:1rem; display:flex; align-items:center; gap:8px; }
+  .combo-card p{ margin:0; color:var(--ink-soft); font-size:.84rem; line-height:1.45; }
+  .combo-card .meta-line{ font-size:.78rem; color:var(--ink-soft); }
+  .combo-card .meta-line strong{ color:var(--primary-dark); }
+  .combo-card.final-total{ border-color: var(--gold); background: linear-gradient(155deg, var(--gold-tint), var(--surface) 65%); }
+  .combo-card.final-total .cta{ background:var(--gold); border-color:var(--gold); }
+  .combo-card.final-total .cta:hover{ filter:brightness(.92); }
+  .combo-card.disabled{ opacity:.65; }
+  .badge{
+    font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.05em;
+    padding:3px 8px; border-radius:999px; background:var(--surface-alt); color:var(--ink-soft);
+  }
+  .badge.soon{ background:var(--gold-tint); color:var(--gold); }
+  .cta{
+    align-self:flex-start; background:var(--primary); color:#fff; border:1.5px solid var(--primary); border-radius:11px;
+    padding:10px 16px; font-size:.88rem; font-weight:600; cursor:pointer; transition: filter .15s ease, transform .1s ease;
+  }
+  .cta:hover{ filter:brightness(.92); }
+  .cta:active{ transform: scale(.98); }
+  .cta:disabled{ opacity:.5; cursor:default; }
+  .cta:focus-visible{ outline:2px solid var(--primary-dark); outline-offset:2px; }
 
   /* ---- flashcard ---- */
   .card{
@@ -143,24 +169,28 @@
     font-size:.68rem; text-transform:uppercase; letter-spacing:.07em; font-weight:700;
     color:var(--primary-dark); background:var(--primary-tint); padding:5px 10px; border-radius:999px;
   }
-  .question-text{ font-size:1.14rem; line-height:1.5; margin:0; text-wrap: balance; }
+  .question-text{ font-size:1.12rem; line-height:1.5; margin:0; text-wrap: balance; }
+  .hint-text{ margin:-8px 0 0; font-size:.78rem; color:var(--ink-soft); }
 
   .options{ display:flex; flex-direction:column; gap:9px; }
   .option{
     text-align:left; border:1.5px solid var(--border); background:var(--surface-alt);
-    color:var(--ink); border-radius:12px; padding:12px 14px; font-size:.95rem;
+    color:var(--ink); border-radius:12px; padding:12px 14px; font-size:.94rem;
     cursor:pointer; transition: border-color .15s ease, background .18s ease, transform .1s ease;
     display:flex; align-items:center; gap:10px;
   }
   .option .letter{
     width:22px; height:22px; border-radius:7px; background:var(--surface); border:1px solid var(--border);
-    display:flex; align-items:center; justify-content:center; font-size:.72rem; font-weight:700; color:var(--ink-soft);
+    display:flex; align-items:center; justify-content:center; font-size:.7rem; font-weight:700; color:var(--ink-soft);
     flex-shrink:0;
   }
+  .option.multi .letter{ border-radius:6px; }
   .option:hover:not(:disabled){ border-color:var(--primary); }
   .option:active:not(:disabled){ transform: scale(.99); }
   .option:focus-visible{ outline:2px solid var(--primary); outline-offset:2px; }
   .option:disabled{ cursor:default; }
+  .option.picked{ border-color:var(--primary); background:var(--primary-tint); }
+  .option.picked .letter{ background:var(--primary); border-color:var(--primary); color:#fff; }
   .option.correct{ background:var(--success-tint); border-color:var(--success); }
   .option.correct .letter{ background:var(--success); border-color:var(--success); color:#fff; }
   .option.incorrect{ background:var(--error-tint); border-color:var(--error); animation: shake .32s; }
@@ -225,13 +255,16 @@
 <div class="app">
   <header class="top">
     <div class="titles">
-      <h1 class="serif">Práctica de Recursos Humanos</h1>
-      <p id="subtitle">Reclutamiento · Capacitación · Auditoría · Evaluación del desempeño</p>
+      <button class="icon-btn hidden" id="backBtn" title="Volver al inicio" aria-label="Volver al inicio">←</button>
+      <div>
+        <h1 class="serif">Práctica de Recursos Humanos</h1>
+        <p id="subtitle">GEST1662 · Repaso por semana</p>
+      </div>
     </div>
-    <button class="icon-btn" id="resetBtn" title="Reiniciar progreso" aria-label="Reiniciar progreso">↺</button>
+    <button class="icon-btn" id="resetBtn" title="Reiniciar todo el progreso" aria-label="Reiniciar todo el progreso">↺</button>
   </header>
 
-  <div class="stat-rail" id="statRail">
+  <div class="stat-rail hidden" id="statRail">
     <div class="stat">
       <span class="label">Puntos</span>
       <span class="value mono" id="scoreVal">0</span>
@@ -243,23 +276,30 @@
     </div>
   </div>
 
-  <!-- MODE SELECT SCREEN -->
-  <section class="mode-screen" id="modeScreen">
-    <div class="mode-card">
-      <h2 class="serif">Elegí cómo estudiar</h2>
-      <p>21 preguntas de opción múltiple y verdadero/falso sobre gestión de personas.</p>
-      <div class="mode-options">
-        <button class="mode-btn selected" id="btnEstudio" data-mode="estudio">
-          <strong>Modo Estudio</strong>
-          <span>Preguntas en orden, sin apuro.</span>
-        </button>
-        <button class="mode-btn" id="btnExamen" data-mode="examen">
-          <strong>Modo Examen</strong>
-          <span>Orden aleatorio, se guarda tu mejor puntaje.</span>
-        </button>
-      </div>
-      <p class="best-score" id="bestScoreLine"></p>
-      <button class="start-btn" id="startBtn">Comenzar</button>
+  <!-- HOME SCREEN -->
+  <section class="home-screen" id="homeScreen">
+    <div class="section-title">Por semana</div>
+    <div class="section-hint">Cada semana en su propio orden, tal como está en el material.</div>
+    <div class="week-grid" id="weekGrid"></div>
+
+    <div class="section-title">Repaso combinado</div>
+    <div class="combo-card" id="generalCard">
+      <h2 class="serif">Repaso general (Semanas 1-8)</h2>
+      <p>Todas las preguntas de las 8 semanas, una después de la otra, en orden. Ideal para repasar todo de corrido antes del examen final.</p>
+      <p class="meta-line" id="generalMeta"></p>
+      <button class="cta" id="generalBtn">Empezar repaso general</button>
+    </div>
+    <div class="combo-card disabled" id="examenFinalCard">
+      <h2 class="serif">Examen Final <span class="badge soon">Próximamente</span></h2>
+      <p>Todavía no tengo las preguntas del examen final. Cuando me las pases, va a aparecer acá como una semana más.</p>
+    </div>
+
+    <div class="section-title">El más difícil</div>
+    <div class="combo-card final-total" id="finalTotalCard">
+      <h2 class="serif">🏆 Prueba Final Total</h2>
+      <p>Todas las semanas juntas (y el examen final, en cuanto lo sume) en <strong>orden 100% aleatorio</strong>: cada vez que entrás cambia el orden de las preguntas y de las opciones, para que no memorices posiciones.</p>
+      <p class="meta-line" id="finalTotalMeta"></p>
+      <button class="cta" id="finalTotalBtn">Empezar Prueba Final Total</button>
     </div>
   </section>
 
@@ -268,6 +308,7 @@
     <div class="card" id="cardEl">
       <span class="eyebrow" id="topicTag">Tema</span>
       <p class="question-text serif" id="questionText"></p>
+      <p class="hint-text hidden" id="hintText">Marcá todas las opciones correctas y confirmá.</p>
       <div class="options" id="optionsWrap"></div>
       <div id="revealWrap"></div>
       <div class="card-actions">
@@ -301,7 +342,7 @@
         <ul id="missedList"></ul>
       </details>
       <div class="summary-actions">
-        <button class="btn" id="changeModeBtn">Cambiar modo</button>
+        <button class="btn" id="homeBtn">Volver al inicio</button>
         <button class="btn primary" id="retryBtn">Reintentar</button>
       </div>
     </div>
@@ -312,83 +353,249 @@
 (function(){
   "use strict";
 
-  var QUESTIONS = [
-    { id:1, topic:"Relaciones laborales", type:"mc",
-      q:"Una organización implementa reuniones periódicas y protocolos para resolver conflictos entre trabajadores y directivos. Esta acción corresponde principalmente a:",
-      options:["Relaciones laborales","Planeamiento de personal","Selección de personal","Auditoría de personal"], correct:0 },
-    { id:2, topic:"Fundamentos de RRHH", type:"tf",
-      q:"En el enfoque tradicional de Recursos Humanos, los trabajadores eran considerados socios estratégicos de la organización.",
-      options:["Verdadero","Falso"], correct:1 },
-    { id:3, topic:"Competencias", type:"tf",
-      q:"Las competencias técnicas se refieren a conocimientos y habilidades específicas necesarias para desempeñar un cargo.",
-      options:["Verdadero","Falso"], correct:0 },
-    { id:4, topic:"Competencias", type:"mc",
-      q:"Un colaborador posee excelentes conocimientos técnicos, pero presenta dificultades para trabajar en equipo y comunicarse con sus compañeros. ¿Qué tipo de competencias debería fortalecer principalmente?",
-      options:["Competencias conductuales","Competencias operativas","Competencias técnicas","Competencias financieras"], correct:0 },
-    { id:5, topic:"Análisis de puestos", type:"tf",
-      q:"El análisis de puestos constituye la base para los procesos de selección, capacitación y evaluación del desempeño.",
-      options:["Verdadero","Falso"], correct:0 },
-    { id:6, topic:"Planeamiento de RRHH", type:"mc",
-      q:"Una empresa prevé abrir dos nuevas sucursales el próximo año y comienza a estimar cuántos colaboradores necesitará contratar y capacitar para cubrir las nuevas posiciones. ¿A qué función de Recursos Humanos corresponde principalmente esta actividad?",
-      options:["Planeamiento de Recursos Humanos","Relaciones laborales","Evaluación del desempeño","Compensación y beneficios"], correct:0 },
-    { id:7, topic:"Seguridad social", type:"tf",
-      q:"Los sistemas de seguridad social pueden clasificarse en sistemas públicos y sistemas privados.",
-      options:["Verdadero","Falso"], correct:0 },
-    { id:8, topic:"Gestión del cambio", type:"mc",
-      q:"Los colaboradores manifiestan preocupación ante la implementación de nuevas tecnologías en la organización. ¿Cuál sería la estrategia más adecuada para reducir la resistencia al cambio?",
-      options:["Aplicar sanciones disciplinarias.","Mejorar la comunicación y ofrecer capacitación.","Sustituir a los trabajadores que manifiesten dudas.","Evitar brindar información hasta finalizar el proceso."], correct:1 },
-    { id:9, topic:"Inducción", type:"mc",
-      q:"Una empresa incorpora un nuevo colaborador y durante su primera semana le presenta la misión, visión, normas internas y funciones del cargo. ¿A qué proceso corresponde esta actividad?",
-      options:["Capacitación","Evaluación del desempeño","Inducción","Reclutamiento"], correct:2 },
-    { id:10, topic:"Balance social", type:"tf",
-      q:"El balance social permite evaluar las relaciones de la organización con empleados, clientes, proveedores, accionistas y comunidad.",
-      options:["Verdadero","Falso"], correct:0 },
-    { id:11, topic:"Reclutamiento", type:"mc",
-      q:"Una organización decide cubrir una vacante promocionando a un colaborador que ya trabaja dentro de la empresa. ¿Qué tipo de reclutamiento está utilizando?",
-      options:["Reclutamiento externo","Reclutamiento mixto","Reclutamiento interno","Reclutamiento estratégico"], correct:2 },
-    { id:12, topic:"Evaluación del desempeño", type:"tf",
-      q:"La evaluación del desempeño tiene como objetivo principal sancionar a los trabajadores con bajo rendimiento.",
-      options:["Verdadero","Falso"], correct:1 },
-    { id:13, topic:"Fundamentos de RRHH", type:"tf",
-      q:"La gestión estratégica de Recursos Humanos busca alinear las políticas y prácticas de personal con los objetivos organizacionales.",
-      options:["Verdadero","Falso"], correct:0 },
-    { id:14, topic:"Capacitación", type:"mc",
-      q:"Una empresa detecta que sus trabajadores tienen dificultades para utilizar un nuevo sistema informático y organiza talleres para mejorar dichas habilidades. ¿Qué proceso de Recursos Humanos está desarrollando?",
-      options:["Auditoría de personal","Seguridad social","Capacitación","Reclutamiento"], correct:2 },
-    { id:15, topic:"Selección", type:"mc",
-      q:"Durante el proceso de selección, una empresa aplica entrevistas, pruebas psicotécnicas y verifica referencias laborales. ¿Cuál es el objetivo principal de estas actividades?",
-      options:["Evaluar el clima organizacional","Capacitar al personal nuevo","Elegir al candidato con mayor adecuación al puesto y la organización.","Reducir costos salariales."], correct:2 },
-    { id:16, topic:"Auditoría", type:"mc",
-      q:"Una organización revisa periódicamente los accesos y permisos de sus empleados a los sistemas informáticos para verificar que se ajusten a sus funciones. ¿A qué proceso corresponde esta actividad?",
-      options:["Auditoría de personas en sistemas de información","Inducción organizacional","Evaluación del desempeño","Seguridad social"], correct:0 },
-    { id:17, topic:"Seguridad e higiene", type:"tf",
-      q:"La seguridad e higiene ocupacional busca prevenir accidentes y enfermedades laborales.",
-      options:["Verdadero","Falso"], correct:0 },
-    { id:18, topic:"Gestión del cambio", type:"tf",
-      q:"La resistencia al cambio se produce únicamente porque las personas se oponen a cualquier tipo de innovación.",
-      options:["Verdadero","Falso"], correct:1 },
-    { id:19, topic:"Evaluación del desempeño", type:"mc",
-      q:"Una empresa evalúa a un supervisor mediante la opinión de superiores, compañeros, subordinados y clientes internos. ¿Qué tipo de evaluación está utilizando?",
-      options:["Evaluación funcional","Evaluación por antigüedad","Evaluación tradicional","Evaluación 360°"], correct:3 },
-    { id:20, topic:"Auditoría", type:"tf",
-      q:"La auditoría de Recursos Humanos posee exclusivamente un carácter punitivo y fiscalizador.",
-      options:["Verdadero","Falso"], correct:1 },
-    { id:21, topic:"Inducción", type:"tf",
-      q:"La inducción tiene como finalidad facilitar la adaptación del nuevo colaborador a la organización y reducir su incertidumbre inicial.",
-      options:["Verdadero","Falso"], correct:0 }
+  // ---------------------------------------------------------------------
+  // DATA — transcripto del PDF "Repaso General - Gestión de Recursos Humanos"
+  // type: "single" (una correcta), "multi" (varias correctas), "fill" (completar, sin opciones)
+  // ---------------------------------------------------------------------
+  var WEEKS = [
+    { id:1, title:"Organización y Gestión Estratégica de RRHH", questions:[
+      { type:"single", src:"Actividad de repaso", q:"Estrategia es:", options:[
+        "Definirse como aquel comportamiento empresarial que da respuesta a los continuos cambios que se producen en el entorno y necesidades de los directivos.",
+        "Definirse como aquel comportamiento empresarial que da respuesta a los continuos cambios que se producen en el entorno y necesidades de los clientes.",
+        "Todas las respuestas son correctas."
+      ], correct:2 },
+      { type:"single", src:"Actividad de repaso", q:"La planificación estratégica se basa en:", options:[
+        "Conjugar la empresa y el mercado.",
+        "Establecer los objetivos por parte de los responsables del mercado.",
+        "Establecer los objetivos por parte de los responsables de la empresa."
+      ], correct:2 },
+      { type:"single", src:"Actividad de repaso", q:"Características de las políticas de gestión de recursos humanos:", options:[
+        "Todas las respuestas son correctas.",
+        "Estabilidad, consistencia, flexibilidad y generalidad.",
+        "Consistencia y políticas de gestión."
+      ], correct:1 },
+      { type:"fill", src:"Actividad de repaso", q:"_____ del puesto: una herramienta para determinar qué se hace y qué debería hacerse en un determinado puesto.", answer:"Análisis" },
+      { type:"fill", src:"Actividad de repaso", q:"_____ de puesto: se refiere al puesto en sí.", answer:"Descripción" },
+      { type:"fill", src:"Actividad de repaso", q:"_____ del puesto: describe las características necesarias de los empleados para desempeñarse adecuadamente en el puesto.", answer:"Especificación" },
+      { type:"single", src:"Cuestionario", q:"Una empresa multinacional posee directores de Recursos Humanos en cada fábrica, quienes dependen jerárquicamente del director de la fábrica, pero funcionalmente del director corporativo de Recursos Humanos. ¿Qué tipo de relación existe entre el director corporativo y los directores de RRHH de cada fábrica?", options:[
+        "Relación operativa descentralizada.","Relación departamental horizontal.","Relación jerárquica ascendente.","Relación funcional.","Relación de supervisión informal."
+      ], correct:3 },
+      { type:"single", src:"Cuestionario", q:"Una empresa estructura sus departamentos según las características de los clientes a quienes dirige sus productos y servicios, diferenciando áreas para empresas y particulares. ¿Qué tipo de departamentalización está utilizando?", options:[
+        "Estructura geográfica.","Estructura por cliente.","Estructura piramidal.","Estructura funcional.","Estructura por procesos administrativos."
+      ], correct:1 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál de las siguientes situaciones representa con mayor precisión una organización informal dentro de una empresa?", options:[
+        "Un grupo espontáneo de trabajadores de distintas áreas que comparte ideas y genera propuestas de mejora.",
+        "La distribución jerárquica de puestos según niveles de autoridad.",
+        "La asignación oficial de funciones mediante un organigrama corporativo.",
+        "La creación de un nuevo departamento aprobada por Dirección General.",
+        "La implementación de normas internas sobre horarios y procedimientos."
+      ], correct:0 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál de las siguientes situaciones refleja de manera más precisa el enfoque organizativo del Departamento de Recursos Humanos?", options:[
+        "Recursos Humanos incorpora procesos de selección, formación y motivación además de las tareas administrativas.",
+        "La empresa externaliza completamente las funciones administrativas y RRHH actúa solo como asesor estratégico.",
+        "El departamento se enfoca exclusivamente en disminuir costos laborales y controlar sanciones disciplinarias.",
+        "El departamento se dedica únicamente al control jurídico y administrativo de los trabajadores.",
+        "Recursos Humanos limita su función al manejo de nóminas y contratos laborales."
+      ], correct:0 },
+      { type:"single", src:"Cuestionario", q:"Según el enfoque de la Gestión Estratégica de Recursos Humanos (GERH), ¿cuál de las siguientes afirmaciones refleja mejor el enfoque sistémico mencionado en el texto?", options:[
+        "La GRH integra diferentes prácticas, áreas funcionales y estrategias organizacionales para generar valor y competitividad.",
+        "La función principal de la GRH es supervisar el cumplimiento de normas laborales y administrativas.",
+        "La estrategia organizacional debe adaptarse únicamente a las necesidades individuales de los trabajadores.",
+        "La gestión de personas depende exclusivamente del departamento de recursos humanos.",
+        "Los procesos de recursos humanos funcionan de manera independiente para evitar interferencias entre áreas."
+      ], correct:0 },
+      { type:"single", src:"Cuestionario", q:"De acuerdo con Chiavenato (2007), una diferencia clave entre la era de relaciones industriales y la era de gestión del talento humano es que en esta última:", options:[
+        "Las personas son consideradas recursos organizacionales que deben ser administrados mediante control rígido.",
+        "Las personas son vistas como socios estratégicos, proactivos y proveedores de conocimiento y competencias.",
+        "Las actividades de recursos humanos son exclusivamente operacionales y burocráticas.",
+        "El principal objetivo organizacional es reducir costos laborales y aumentar la disciplina.",
+        "Predomina una estructura burocrática y centralizada enfocada en la estabilidad."
+      ], correct:1 },
+      { type:"single", src:"Cuestionario", q:"Una empresa decide externalizar la mayor parte de las tareas administrativas del área de Recursos Humanos. ¿Cuál debería ser, según el enfoque estratégico actual, la principal función del departamento?", options:[
+        "Supervisar exclusivamente el cumplimiento de normas disciplinarias.",
+        "Centralizar únicamente los procesos de contratación y despido.",
+        "Definir y desarrollar el talento necesario para cumplir la estrategia empresarial.",
+        "Reducir costos mediante la eliminación de programas de capacitación.",
+        "Limitarse al control de asistencia y puntualidad del personal."
+      ], correct:2 }
+    ]},
+    { id:2, title:"Análisis de puestos, reclutamiento y selección", questions:[
+      { type:"single", src:"Actividad de repaso", q:"Es el proceso administrativo aplicado al acrecentamiento y conservación del esfuerzo, las experiencias, la salud, los conocimientos, las habilidades, etc., de los miembros de la organización, en beneficio del individuo, de la propia organización y del país en general:", options:[
+        "Administración Financiera.","Administración de Recursos Humanos.","Administración."
+      ], correct:1 },
+      { type:"single", src:"Actividad de repaso", q:"Los orígenes de Recursos Humanos, especialidad surgida del crecimiento y la complejidad de las tareas organizacionales, se remonta a los inicios del siglo:", options:["XX","XXI","IXX"], correct:0 },
+      { type:"single", src:"Actividad de repaso", q:"La estructura del personal la determina:", options:["El Gerente Financiero.","El empresario.","El jefe de Gestión del Personal."], correct:1 },
+      { type:"single", src:"Cuestionario", q:"Dentro del análisis de puestos, la observación directa permite:", options:[
+        "Diseñar campañas de reclutamiento externo.","Aplicar evaluaciones de desempeño grupales.","Evaluar la personalidad de los candidatos.",
+        "Identificar funciones y responsabilidades mediante la observación del trabajo realizado.","Determinar incentivos salariales para todos los empleados."
+      ], correct:3 },
+      { type:"single", src:"Cuestionario", q:"En la evaluación de desempeño, los objetivos SMART se caracterizan por ser:", options:[
+        "Orientados exclusivamente al control disciplinario.","Aplicados únicamente en empresas grandes.",
+        "Específicos, medibles, alcanzables, relevantes y con tiempo definido.","Generales y flexibles según cada empleado.","Definidos solamente por el área administrativa."
+      ], correct:2 },
+      { type:"single", src:"Cuestionario", q:"Las entrevistas de ajuste cultural tienen como objetivo principal:", options:[
+        "Determinar la experiencia laboral del postulante.","Evaluar la alineación del candidato con los valores y cultura de la empresa.",
+        "Analizar únicamente los conocimientos técnicos del candidato.","Verificar antecedentes académicos.","Definir el salario que recibirá el empleado."
+      ], correct:1 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál es el propósito principal del proceso de inducción?", options:[
+        "Integrar al nuevo empleado y facilitar su adaptación al entorno laboral.","Definir promociones y ascensos internos.",
+        "Aplicar evaluaciones psicométricas a todos los trabajadores.","Medir el rendimiento de los empleados antiguos.","Capacitar solamente a los supervisores de la empresa."
+      ], correct:0 },
+      { type:"single", src:"Cuestionario", q:"El proceso de reclutamiento dentro de una organización tiene como principal finalidad:", options:[
+        "Aplicar sanciones disciplinarias a los empleados.","Evaluar el desempeño de los trabajadores antiguos.","Aumentar únicamente la cantidad de postulantes.",
+        "Realizar promociones automáticas dentro de la empresa.","Atraer candidatos calificados que puedan adaptarse a la organización."
+      ], correct:4 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál de las siguientes opciones corresponde a una fuente interna de reclutamiento?", options:[
+        "Promociones y transferencias del personal actual.","Uso de redes sociales profesionales.","Publicación de anuncios en portales de empleo.",
+        "Contratación mediante agencias externas.","Participación en ferias de empleo."
+      ], correct:0 }
+    ]},
+    { id:3, title:"Planeación estratégica del talento humano y auditoría", questions:[
+      { type:"single", src:"Actividad de repaso", q:"Procedimiento destinado a atraer candidatos potencialmente cualificados y con el perfil deseado:", options:["Inducción","Reclutamiento","Socialización"], correct:1 },
+      { type:"single", src:"Actividad de repaso", q:"Proceso de estudiar un puesto para determinar qué actividades y responsabilidades incluye:", options:["Reclutamiento","Análisis de puesto de trabajo","Inducción"], correct:1 },
+      { type:"single", src:"Actividad de repaso", q:"Conjunto de normas y procedimientos que tienen como finalidad proteger la integridad física y mental de los trabajadores:", options:["Reclutamiento","Seguridad e higiene laboral","Análisis de puesto de trabajo"], correct:1 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál es el objetivo principal de la planeación estratégica del talento humano?", options:[
+        "Anticipar y gestionar las necesidades de personal para apoyar los objetivos organizacionales.","Controlar las actividades de los sindicatos.",
+        "Incrementar únicamente la productividad de los trabajadores.","Reducir los costos operativos de la empresa."
+      ], correct:0 },
+      { type:"single", src:"Cuestionario", q:"Según la investigación, una de las dificultades encontradas en las empresas del sector floricultor fue:", options:[
+        "Exceso de programas de capacitación.","Sobreinversión en desarrollo de personal.","Ausencia de procesos de reclutamiento.",
+        "Alta rotación del personal operativo y falta de políticas de selección.","Exceso de contratación indefinida."
+      ], correct:3 },
+      { type:"single", src:"Cuestionario", q:"Según el texto, ¿por qué es importante alinear la gestión del talento humano con la estrategia organizacional?", options:[
+        "Porque contribuye al logro de los objetivos organizacionales y fortalece la competitividad de la empresa.","Porque reemplaza la evaluación del desempeño.",
+        "Porque permite reducir los salarios de los trabajadores.","Porque facilita la eliminación de los procesos de capacitación.","Porque disminuye la necesidad de supervisión."
+      ], correct:0 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál es una de las principales finalidades de la auditoría de recursos humanos?", options:[
+        "Sustituir a los directivos de la organización.","Controlar únicamente el ausentismo laboral.","Determinar exclusivamente los costos salariales.",
+        "Evaluar las actividades de gestión de personal para mejorarlas y apoyar las estrategias corporativas.","Elaborar contratos de trabajo."
+      ], correct:3 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál de los siguientes procesos básicos de personal forma parte de la matriz organizacional propuesta en la investigación?", options:[
+        "Gestión financiera.","Producción industrial.","Marketing organizacional.","Evaluación del desempeño.","Planeación de ventas."
+      ], correct:3 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál de las siguientes razones justifica la evaluación continua de la gestión de recursos humanos?", options:[
+        "Sustituir los indicadores de gestión.","Evitar la planeación estratégica.","Comprender la contribución de los recursos humanos a la eficiencia y eficacia organizacional.",
+        "Reducir la participación de los trabajadores.","Eliminar completamente los procesos de control."
+      ], correct:2 }
+    ]},
+    { id:4, title:"Gestión por competencias y gestión del cambio", questions:[
+      { type:"single", src:"Actividad de repaso", q:"Permitirá a los empleados mantenerse siempre actualizados:", options:["Capacitación de personas","Auditoría de RRHH","Desarrollo de personas"], correct:0 },
+      { type:"single", src:"Actividad de repaso", q:"Análisis de las políticas y prácticas de personal de una empresa:", options:["Capacitación de personas","Auditoría de RRHH","Desarrollo de personas"], correct:1 },
+      { type:"single", src:"Actividad de repaso", q:"Involucra cuestiones más relacionadas con experiencias, satisfacción y carrera profesional:", options:["Capacitación de personas","Auditoría de RRHH","Desarrollo de personas"], correct:2 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál de las siguientes alternativas representa una competencia conductual?", options:[
+        "Conocimiento de normas contables.","Manejo de una máquina industrial.","Elaboración de presupuestos financieros.",
+        "Dominio avanzado de una herramienta informática.","Comunicación efectiva y capacidad para trabajar en equipo."
+      ], correct:4 },
+      { type:"single", src:"Cuestionario", q:"Una empresa desea identificar futuros líderes para ocupar cargos directivos en caso de vacancias. Según la gestión por competencias, ¿qué práctica resulta más apropiada para este propósito?", options:[
+        "Reducir los procesos de evaluación de desempeño.","Incrementar los salarios de todos los empleados.","Contratar exclusivamente personal externo para puestos de liderazgo.",
+        "Utilizar las competencias como base para promociones y planificación de sucesiones.","Eliminar los programas de formación y desarrollo."
+      ], correct:3 },
+      { type:"single", src:"Cuestionario", q:"Una organización implementa un nuevo sistema tecnológico que modifica varios procesos de trabajo. Sin embargo, los empleados muestran rechazo debido a la incertidumbre sobre cómo afectará sus funciones. ¿Cuál de las siguientes acciones sería la más adecuada para reducir la resistencia al cambio?", options:[
+        "Mantener los procesos antiguos junto con los nuevos de manera indefinida.","Sustituir inmediatamente a los empleados que expresen resistencia.",
+        "Aplicar sanciones a quienes no adopten el nuevo sistema.","Limitar la información sobre el cambio para evitar preocupaciones.",
+        "Proporcionar información clara sobre el cambio e involucrar a los empleados en el proceso."
+      ], correct:4 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál de las siguientes situaciones refleja mejor la integración de la Gestión Estratégica de Recursos Humanos con los objetivos organizacionales?", options:[
+        "Capacitar a todos los empleados con los mismos contenidos independientemente de sus funciones.","Evaluar el desempeño únicamente cuando existen problemas disciplinarios.",
+        "Diseñar beneficios sin considerar las necesidades de los empleados.","Planificar las necesidades futuras de personal en función de los objetivos estratégicos de la organización.",
+        "Contratar personal únicamente cuando se producen vacantes."
+      ], correct:3 },
+      { type:"single", src:"Cuestionario", q:"Una organización busca evaluar el desarrollo de competencias de sus empleados mediante opiniones provenientes de superiores, compañeros y subordinados. ¿Qué herramienta está utilizando?", options:[
+        "Plan de sucesión.","Capacitación por competencias.","Feedback 360 grados.","Evaluación psicotécnica.","Análisis de puestos."
+      ], correct:2 },
+      { type:"single", src:"Cuestionario", q:"Un gerente observa que un colaborador posee amplios conocimientos técnicos sobre el uso de un software especializado, lo que le permite desempeñar eficazmente sus tareas. ¿Qué tipo de competencia está demostrando principalmente?", options:[
+        "Competencia organizacional.","Competencia estratégica.","Competencia conductual.","Competencia técnica.","Competencia cultural."
+      ], correct:3 }
+    ]},
+    { id:5, title:"Evaluación del desempeño y desarrollo organizacional", questions:[
+      { type:"single", src:"Actividad de repaso", q:"Unión de los recursos humanos con los objetivos y metas para mejorar el desempeño estratégico de la empresa:", options:["Clima laboral","Gestión estratégica","Gestión por competencias"], correct:1 },
+      { type:"single", src:"Actividad de repaso", q:"Proceso que permite identificar capacidades de personal requerido:", options:["Clima laboral","Gestión estratégica","Gestión por competencias"], correct:2 },
+      { type:"single", src:"Actividad de repaso", q:"Medio ambiente humano y físico en el que se desarrolla el trabajo cotidiano:", options:["Clima laboral","Gestión estratégica","Gestión por competencias"], correct:0 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál de las siguientes características corresponde al método de evaluación del desempeño por resultados?", options:[
+        "Se realiza únicamente cuando existe bajo rendimiento.",
+        "Establece objetivos y criterios de desempeño previamente acordados, compara los resultados obtenidos y define acciones de mejora.",
+        "Se basa principalmente en opiniones subjetivas del supervisor.","Evalúa únicamente la conducta del trabajador sin considerar metas."
+      ], correct:1 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál de las siguientes situaciones refleja mejor un principio del Desarrollo Organizacional?", options:[
+        "Implementar cambios únicamente cuando exista una crisis financiera.","Centrar todos los esfuerzos únicamente en aumentar las ventas.",
+        "Aplicar cambios únicamente en un departamento sin considerar al resto de la organización.",
+        "Planificar intervenciones que permitan mejorar la efectividad de la organización y el bienestar de sus integrantes, con apoyo de la alta dirección."
+      ], correct:3 },
+      { type:"single", src:"Cuestionario", q:"Una organización elimina completamente su presupuesto destinado a la capacitación para reducir costos. ¿Cuál sería la consecuencia más probable de esta decisión?", options:[
+        "La productividad aumentará automáticamente porque se reducen los gastos.","Los colaboradores desarrollarán nuevas competencias sin necesidad de capacitación.",
+        "La evaluación del desempeño dejará de ser necesaria.",
+        "La organización podría perder competitividad debido a la disminución de conocimientos, habilidades y capacidad de adaptación de sus colaboradores."
+      ], correct:3 },
+      { type:"single", src:"Cuestionario", q:"Una empresa realiza la evaluación del desempeño y detecta que varios colaboradores presentan dificultades para cumplir con los estándares de su puesto. Según el material de estudio, ¿cuál debería ser una de las acciones más apropiadas?", options:[
+        "Detectar las necesidades de capacitación y diseñar acciones de desarrollo para mejorar su desempeño.","Despedir inmediatamente a los trabajadores con menor desempeño.",
+        "Eliminar el sistema de evaluación del desempeño.","Reducir las responsabilidades de todos los colaboradores."
+      ], correct:0 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál de las siguientes afirmaciones describe correctamente la diferencia entre entrenamiento y desarrollo profesional?", options:[
+        "El entrenamiento prepara a la persona para ejercer una profesión y el desarrollo profesional se limita al aprendizaje inicial.",
+        "El entrenamiento adapta a la persona para realizar una tarea específica, mientras que el desarrollo profesional busca ampliar y perfeccionar su crecimiento en la organización.",
+        "Ambos tienen exactamente el mismo objetivo.","El desarrollo profesional únicamente se aplica a directivos."
+      ], correct:1 },
+      { type:"single", src:"Cuestionario", q:"¿Cuál es el propósito principal de la evaluación del desempeño dentro de la gestión de recursos humanos?", options:[
+        "Supervisar exclusivamente el cumplimiento del horario laboral.",
+        "Obtener información para mejorar el desempeño, apoyar la toma de decisiones y contribuir al desarrollo del personal.",
+        "Establecer únicamente incrementos salariales.","Determinar únicamente qué trabajadores deben ser sancionados."
+      ], correct:1 }
+    ]},
+    { id:6, title:"Aprendizaje y capacitación", questions:[
+      { type:"single", src:"Actividad de repaso", q:"Es el proceso que permite a los individuos adquirir conocimientos de su ambiente y sus relaciones en el transcurso de su vida:", options:["Aprendizaje","Capacitación o entrenamiento","Evaluación de desempeño"], correct:0 },
+      { type:"single", src:"Actividad de repaso", q:"Es el acto intencional de proporcionar los medios para posibilitar el aprendizaje:", options:["Aprendizaje","Capacitación o entrenamiento","Evaluación de desempeño"], correct:1 },
+      { type:"single", src:"Actividad de repaso", q:"Contar con un sistema formal de _____ permite a la gestión de recursos humanos evaluar sus procedimientos:", options:["Aprendizaje","Capacitación o entrenamiento","Evaluación de desempeño"], correct:2 }
+    ]},
+    { id:7, title:"Auditoría de personal y prevención de riesgos", questions:[
+      { type:"single", src:"Actividad de repaso", q:"Evalúa las actividades realizadas por el personal con el objetivo de mejorarlas:", options:["Evaluación de los riesgos","Seguridad social","Auditoría de personal"], correct:2 },
+      { type:"single", src:"Actividad de repaso", q:"Tiene como objetivo identificar los elementos que podrían causar daño o suponer un peligro:", options:["Evaluación de los riesgos","Seguridad social","Auditoría de personal"], correct:0 },
+      { type:"single", src:"Actividad de repaso", q:"La política de prevención de riesgos ocupacionales se desarrolla a través de:", options:["Auditoría de personal","Evaluación de los riesgos","La seguridad, higiene y medicina del trabajo"], correct:2 }
+    ]},
+    { id:8, title:"Responsabilidad Social Empresarial", questions:[
+      { type:"multi", src:"Actividad de repaso", q:"Responsabilidad Social Empresarial consiste en:", options:[
+        "Equilibrio entre crecimiento económico, bienestar social.","Basados en principios éticos y apegados a la ley.","Hacer negocios.","Seguridad social.","Evaluación de los riesgos."
+      ], correct:[0,1,2] },
+      { type:"multi", src:"Actividad de repaso", q:"Responsabilidades sociales de la empresa según Carroll:", options:[
+        "Sociales","Productivas","Filantrópicas","Éticas","Educativas","Económicas","Financieras","Legales"
+      ], correct:[2,3,5,7] }
+    ]}
   ];
 
-  var STORAGE_KEY = "rrhhPractica_v1";
-  var BEST_KEY = "rrhhPractica_bestExamen";
+  // Flatten with week references
+  var ALL_QUESTIONS = [];
+  WEEKS.forEach(function(w){
+    w.questions.forEach(function(q){
+      ALL_QUESTIONS.push(Object.assign({}, q, { week:w.id, weekTitle:w.title }));
+    });
+  });
 
-  var els = {};
-  ["modeScreen","quizScreen","summaryScreen","btnEstudio","btnExamen","startBtn","bestScoreLine",
-   "scoreVal","progLabel","modeLabel","progFill","topicTag","questionText","optionsWrap","revealWrap",
-   "showAnswerBtn","nextBtn","resetBtn","cardEl","summaryTitle","ringFg","summaryPct","sumCorrect",
-   "sumIncorrect","missedList","changeModeBtn","retryBtn","confetti","subtitle"
-  ].forEach(function(id){ els[id] = document.getElementById(id); });
+  var LS_PREFIX = "rrhhRepaso_v1_";
 
-  var state = null;
+  // ---------------------------------------------------------------------
+  // Storage helpers
+  // ---------------------------------------------------------------------
+  function saveBest(key, correct, total){
+    try{
+      var pct = Math.round((correct/total)*100);
+      localStorage.setItem(LS_PREFIX+key, JSON.stringify({ correct:correct, total:total, pct:pct }));
+    } catch(e){}
+  }
+  function getBest(key){
+    try{
+      var raw = localStorage.getItem(LS_PREFIX+key);
+      return raw ? JSON.parse(raw) : null;
+    } catch(e){ return null; }
+  }
+  function clearAll(){
+    try{
+      var toRemove = [];
+      for (var i=0;i<localStorage.length;i++){
+        var k = localStorage.key(i);
+        if (k && k.indexOf(LS_PREFIX)===0) toRemove.push(k);
+      }
+      toRemove.forEach(function(k){ localStorage.removeItem(k); });
+    } catch(e){}
+  }
 
   function shuffle(arr){
     var a = arr.slice();
@@ -399,205 +606,323 @@
     return a;
   }
 
-  function freshState(mode){
-    var order = QUESTIONS.map(function(q, i){ return i; });
-    if (mode === "examen") order = shuffle(order);
-    return {
-      mode: mode,
-      order: order,
-      pos: 0,
-      score: 0,
-      correctCount: 0,
-      incorrectCount: 0,
-      missed: [],
-      answeredThis: false,
-      selection: null,
-      revealedOnly: false,
-      finished: false
-    };
+  // Returns a cloned question with options (and correct index/indices) shuffled
+  function shuffleQuestionOptions(q){
+    if (q.type === "fill") return q;
+    var idxOrder = shuffle(q.options.map(function(_, i){ return i; }));
+    var newOptions = idxOrder.map(function(i){ return q.options[i]; });
+    var oldToNew = {};
+    idxOrder.forEach(function(oldIdx, newIdx){ oldToNew[oldIdx] = newIdx; });
+    var newCorrect;
+    if (q.type === "multi"){
+      newCorrect = q.correct.map(function(oldIdx){ return oldToNew[oldIdx]; }).sort(function(a,b){return a-b;});
+    } else {
+      newCorrect = oldToNew[q.correct];
+    }
+    return Object.assign({}, q, { options:newOptions, correct:newCorrect });
   }
 
-  function save(){
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch(e){}
+  // ---------------------------------------------------------------------
+  // DOM refs
+  // ---------------------------------------------------------------------
+  var els = {};
+  ["homeScreen","quizScreen","summaryScreen","weekGrid","generalCard","generalMeta","generalBtn",
+   "examenFinalCard","finalTotalCard","finalTotalMeta","finalTotalBtn",
+   "scoreVal","progLabel","modeLabel","progFill","statRail","topicTag","questionText","hintText",
+   "optionsWrap","revealWrap","showAnswerBtn","nextBtn","resetBtn","backBtn","cardEl",
+   "summaryTitle","ringFg","summaryPct","sumCorrect","sumIncorrect","missedList","missedWrap",
+   "homeBtn","retryBtn","confetti","subtitle"
+  ].forEach(function(id){ els[id] = document.getElementById(id); });
+
+  var state = null; // current quiz session
+
+  // ---------------------------------------------------------------------
+  // Home screen rendering
+  // ---------------------------------------------------------------------
+  function renderHome(){
+    els.weekGrid.innerHTML = "";
+    WEEKS.forEach(function(w){
+      var best = getBest("week"+w.id);
+      var btn = document.createElement("button");
+      btn.className = "week-card";
+      btn.innerHTML =
+        '<span class="wk-num">S' + w.id + '</span>' +
+        '<span class="wk-info"><strong>' + escapeHtml(w.title) + '</strong>' +
+        '<span>' + w.questions.length + (w.questions.length===1 ? " pregunta" : " preguntas") + '</span></span>' +
+        '<span class="wk-meta">' + (best ? ('Mejor<br><strong>'+best.correct+'/'+best.total+'</strong>') : '') + '</span>';
+      btn.addEventListener("click", function(){ startSession("week", w.id); });
+      els.weekGrid.appendChild(btn);
+    });
+
+    var genBest = getBest("general");
+    els.generalMeta.textContent = genBest ? ("Último resultado: " + genBest.correct + "/" + genBest.total + " (" + genBest.pct + "%)") : ("Total: " + ALL_QUESTIONS.length + " preguntas");
+    var finalBest = getBest("finalTotal");
+    els.finalTotalMeta.textContent = finalBest ? ("Mejor puntaje: " + finalBest.correct + "/" + finalBest.total + " (" + finalBest.pct + "%)") : ("Total: " + ALL_QUESTIONS.length + " preguntas (por ahora)");
   }
-  function load(){
-    try {
-      var raw = localStorage.getItem(STORAGE_KEY);
-      return raw ? JSON.parse(raw) : null;
-    } catch(e){ return null; }
-  }
-  function clearSave(){
-    try { localStorage.removeItem(STORAGE_KEY); } catch(e){}
-  }
-  function getBest(){
-    try { return parseInt(localStorage.getItem(BEST_KEY) || "0", 10); } catch(e){ return 0; }
-  }
-  function setBest(v){
-    try { localStorage.setItem(BEST_KEY, String(v)); } catch(e){}
+
+  function escapeHtml(s){
+    var d = document.createElement("div");
+    d.textContent = s;
+    return d.innerHTML;
   }
 
   function showScreen(name){
-    els.modeScreen.classList.toggle("hidden", name !== "mode");
+    els.homeScreen.classList.toggle("hidden", name !== "home");
     els.quizScreen.classList.toggle("hidden", name !== "quiz");
     els.summaryScreen.classList.toggle("hidden", name !== "summary");
+    els.statRail.classList.toggle("hidden", name === "home");
+    els.backBtn.classList.toggle("hidden", name === "home");
   }
+
+  // ---------------------------------------------------------------------
+  // Session
+  // ---------------------------------------------------------------------
+  function startSession(mode, weekId){
+    var pool, label, key, randomize;
+    if (mode === "week"){
+      var w = WEEKS.filter(function(x){ return x.id===weekId; })[0];
+      pool = w.questions.map(function(q){ return Object.assign({}, q, { week:w.id, weekTitle:w.title }); });
+      label = "SEMANA " + weekId;
+      key = "week"+weekId;
+      randomize = false;
+    } else if (mode === "general"){
+      pool = ALL_QUESTIONS.slice();
+      label = "REPASO GENERAL";
+      key = "general";
+      randomize = false;
+    } else { // finalTotal
+      pool = ALL_QUESTIONS.slice();
+      label = "PRUEBA FINAL TOTAL";
+      key = "finalTotal";
+      randomize = true;
+    }
+
+    var order = pool;
+    if (randomize){
+      order = shuffle(pool).map(shuffleQuestionOptions);
+    }
+
+    state = {
+      mode: mode, key: key, label: label,
+      questions: order,
+      pos: 0, score: 0, correctCount: 0, incorrectCount: 0,
+      missed: [],
+      answered: false, revealedOnly: false,
+      selection: null,      // for single
+      multiSelection: [],   // for multi
+      confirmed: false
+    };
+    showScreen("quiz");
+    renderQuiz();
+  }
+
+  function currentQuestion(){ return state.questions[state.pos]; }
 
   function renderStatRail(){
-    var total = QUESTIONS.length;
-    var pos = state ? Math.min(state.pos, total) : 0;
-    els.scoreVal.textContent = state ? state.score : 0;
-    els.progLabel.textContent = "Pregunta " + Math.min(pos + 1, total) + " de " + total;
-    if (state && state.finished) els.progLabel.textContent = "Completado " + total + "/" + total;
-    els.modeLabel.textContent = state ? (state.mode === "examen" ? "EXAMEN" : "ESTUDIO") : "";
-    var pct = state ? (pos / total) * 100 : 0;
-    els.progFill.style.width = pct + "%";
+    var total = state.questions.length;
+    els.scoreVal.textContent = state.score;
+    els.progLabel.textContent = "Pregunta " + Math.min(state.pos + 1, total) + " de " + total;
+    els.modeLabel.textContent = state.label;
+    els.progFill.style.width = ((state.pos / total) * 100) + "%";
   }
 
-  function currentQuestion(){
-    var idx = state.order[state.pos];
-    return QUESTIONS[idx];
-  }
-
-  function renderMode(){
-    els.btnEstudio.classList.toggle("selected", pendingMode === "estudio");
-    els.btnExamen.classList.toggle("selected", pendingMode === "examen");
-    var best = getBest();
-    els.bestScoreLine.textContent = best > 0
-      ? "Tu mejor puntaje en Modo Examen: " + best + " / " + QUESTIONS.length
-      : "";
-  }
-
-  var pendingMode = "estudio";
+  function letterFor(i){ return String.fromCharCode(65 + i); }
 
   function renderQuiz(){
     var q = currentQuestion();
-    els.topicTag.textContent = q.topic;
+    els.topicTag.textContent = "Semana " + q.week + " · " + q.src;
     els.questionText.textContent = q.q;
     els.optionsWrap.innerHTML = "";
     els.revealWrap.innerHTML = "";
     els.nextBtn.disabled = true;
-    els.showAnswerBtn.disabled = state.answeredThis;
+    els.hintText.classList.toggle("hidden", q.type !== "multi" || state.answered);
 
-    var letters = ["A","B","C","D"];
-    q.options.forEach(function(optText, i){
-      var btn = document.createElement("button");
-      btn.className = "option";
-      btn.setAttribute("data-idx", i);
-      var letterSpan = document.createElement("span");
-      letterSpan.className = "letter";
-      letterSpan.textContent = q.type === "tf" ? (i === 0 ? "V" : "F") : letters[i];
-      var textSpan = document.createElement("span");
-      textSpan.textContent = optText;
-      btn.appendChild(letterSpan);
-      btn.appendChild(textSpan);
-
-      if (state.answeredThis){
-        btn.disabled = true;
-        if (i === q.correct) btn.classList.add("correct");
-        else if (i === state.selection) btn.classList.add("incorrect");
-        else btn.classList.add("dim");
-      }
-      btn.addEventListener("click", function(){ onSelectOption(i); });
-      els.optionsWrap.appendChild(btn);
-    });
-
-    if (state.answeredThis){
-      if (state.revealedOnly){
-        var box = document.createElement("div");
-        box.className = "reveal-box";
-        box.innerHTML = "<strong>Respuesta correcta:</strong> " + q.options[q.correct] +
-          "<div class='self-grade'></div>";
-        els.revealWrap.appendChild(box);
-        var grade = box.querySelector(".self-grade");
-        var yes = document.createElement("button");
-        yes.className = "btn"; yes.textContent = "Lo sabía ✓";
-        var no = document.createElement("button");
-        no.className = "btn"; no.textContent = "No lo sabía ✕";
-        yes.addEventListener("click", function(){ selfGrade(true); });
-        no.addEventListener("click", function(){ selfGrade(false); });
-        grade.appendChild(yes); grade.appendChild(no);
-      } else {
-        var correct = state.selection === q.correct;
-        var box2 = document.createElement("div");
-        box2.className = "reveal-box";
-        box2.style.background = correct ? "var(--success-tint)" : "var(--error-tint)";
-        box2.innerHTML = correct
-          ? "<strong>¡Correcto!</strong> " + q.options[q.correct]
-          : "<strong>Incorrecto.</strong> La respuesta correcta es: " + q.options[q.correct];
-        els.revealWrap.appendChild(box2);
-        els.nextBtn.disabled = false;
-      }
+    if (q.type === "fill"){
+      els.showAnswerBtn.textContent = "Mostrar respuesta";
+      els.showAnswerBtn.disabled = state.answered;
+    } else if (q.type === "multi"){
+      els.showAnswerBtn.textContent = state.answered ? "Mostrar respuesta" : "Confirmar selección";
+      els.showAnswerBtn.disabled = state.answered;
+      renderMultiOptions(q);
+    } else {
+      els.showAnswerBtn.textContent = "Mostrar respuesta";
+      els.showAnswerBtn.disabled = state.answered;
+      renderSingleOptions(q);
     }
+
+    if (state.answered) renderAnswerFeedback(q);
     renderStatRail();
   }
 
-  function onSelectOption(i){
-    if (state.answeredThis) return;
+  function renderSingleOptions(q){
+    q.options.forEach(function(optText, i){
+      var btn = document.createElement("button");
+      btn.className = "option";
+      var letterSpan = document.createElement("span");
+      letterSpan.className = "letter";
+      letterSpan.textContent = letterFor(i);
+      var textSpan = document.createElement("span");
+      textSpan.textContent = optText;
+      btn.appendChild(letterSpan); btn.appendChild(textSpan);
+
+      if (state.answered){
+        btn.disabled = true;
+        if (state.revealedOnly){
+          if (i === q.correct) btn.classList.add("correct");
+          else btn.classList.add("dim");
+        } else {
+          if (i === q.correct) btn.classList.add("correct");
+          else if (i === state.selection) btn.classList.add("incorrect");
+          else btn.classList.add("dim");
+        }
+      } else {
+        btn.addEventListener("click", function(){ onSelectSingle(i); });
+      }
+      els.optionsWrap.appendChild(btn);
+    });
+  }
+
+  function renderMultiOptions(q){
+    q.options.forEach(function(optText, i){
+      var btn = document.createElement("button");
+      btn.className = "option multi";
+      var letterSpan = document.createElement("span");
+      letterSpan.className = "letter";
+      letterSpan.textContent = letterFor(i);
+      var textSpan = document.createElement("span");
+      textSpan.textContent = optText;
+      btn.appendChild(letterSpan); btn.appendChild(textSpan);
+
+      var picked = state.multiSelection.indexOf(i) !== -1;
+
+      if (state.answered){
+        btn.disabled = true;
+        var isCorrectOpt = q.correct.indexOf(i) !== -1;
+        if (state.revealedOnly){
+          if (isCorrectOpt) btn.classList.add("correct");
+          else btn.classList.add("dim");
+        } else {
+          if (isCorrectOpt) btn.classList.add("correct");
+          else if (picked) btn.classList.add("incorrect");
+          else btn.classList.add("dim");
+        }
+      } else {
+        if (picked) btn.classList.add("picked");
+        btn.addEventListener("click", function(){ toggleMultiOption(i); });
+      }
+      els.optionsWrap.appendChild(btn);
+    });
+  }
+
+  function toggleMultiOption(i){
+    var idx = state.multiSelection.indexOf(i);
+    if (idx === -1) state.multiSelection.push(i);
+    else state.multiSelection.splice(idx, 1);
+    renderQuiz();
+  }
+
+  function onSelectSingle(i){
+    if (state.answered) return;
     var q = currentQuestion();
-    state.answeredThis = true;
+    state.answered = true;
     state.selection = i;
     state.revealedOnly = false;
-    if (i === q.correct){
-      state.score += 1;
-      state.correctCount += 1;
-    } else {
-      state.incorrectCount += 1;
-      state.missed.push(q);
-    }
-    save();
+    if (i === q.correct){ state.score += 1; state.correctCount += 1; }
+    else { state.incorrectCount += 1; state.missed.push(q); }
     renderQuiz();
-    els.nextBtn.disabled = false;
+  }
+
+  function confirmMulti(){
+    var q = currentQuestion();
+    if (state.multiSelection.length === 0) return;
+    state.answered = true;
+    state.revealedOnly = false;
+    var sel = state.multiSelection.slice().sort(function(a,b){return a-b;});
+    var correctSorted = q.correct.slice().sort(function(a,b){return a-b;});
+    var isMatch = sel.length === correctSorted.length && sel.every(function(v,i){ return v===correctSorted[i]; });
+    if (isMatch){ state.score += 1; state.correctCount += 1; }
+    else { state.incorrectCount += 1; state.missed.push(q); }
+    renderQuiz();
   }
 
   function onShowAnswer(){
-    if (state.answeredThis) return;
-    state.answeredThis = true;
+    var q = currentQuestion();
+    if (state.answered) return;
+    if (q.type === "multi" && state.multiSelection.length > 0){
+      confirmMulti();
+      return;
+    }
+    state.answered = true;
     state.revealedOnly = true;
     state.selection = null;
-    save();
     renderQuiz();
   }
 
-  function selfGrade(knewIt){
-    var q = currentQuestion();
-    if (knewIt){
-      state.score += 1;
-      state.correctCount += 1;
+  function renderAnswerFeedback(q){
+    if (state.revealedOnly){
+      var answerLabel = q.type === "fill" ? q.answer :
+        (q.type === "multi" ? q.correct.map(function(i){ return q.options[i]; }).join(" · ") : q.options[q.correct]);
+      var box = document.createElement("div");
+      box.className = "reveal-box";
+      box.innerHTML = "<strong>Respuesta correcta:</strong> " + escapeHtml(answerLabel) + "<div class='self-grade'></div>";
+      els.revealWrap.appendChild(box);
+      var grade = box.querySelector(".self-grade");
+      var yes = document.createElement("button");
+      yes.className = "btn"; yes.textContent = "Lo sabía ✓";
+      var no = document.createElement("button");
+      no.className = "btn"; no.textContent = "No lo sabía ✕";
+      yes.addEventListener("click", function(){ selfGrade(true, q); });
+      no.addEventListener("click", function(){ selfGrade(false, q); });
+      grade.appendChild(yes); grade.appendChild(no);
     } else {
-      state.incorrectCount += 1;
-      state.missed.push(q);
+      var correct;
+      if (q.type === "multi"){
+        var sel = state.multiSelection.slice().sort(function(a,b){return a-b;});
+        var correctSorted = q.correct.slice().sort(function(a,b){return a-b;});
+        correct = sel.length === correctSorted.length && sel.every(function(v,i){ return v===correctSorted[i]; });
+      } else {
+        correct = state.selection === q.correct;
+      }
+      var answerLabel2 = q.type === "multi" ? q.correct.map(function(i){ return q.options[i]; }).join(" · ") : q.options[q.correct];
+      var box2 = document.createElement("div");
+      box2.className = "reveal-box";
+      box2.style.background = correct ? "var(--success-tint)" : "var(--error-tint)";
+      box2.innerHTML = correct
+        ? "<strong>¡Correcto!</strong> " + escapeHtml(answerLabel2)
+        : "<strong>Incorrecto.</strong> La respuesta correcta es: " + escapeHtml(answerLabel2);
+      els.revealWrap.appendChild(box2);
+      els.nextBtn.disabled = false;
     }
+  }
+
+  function selfGrade(knewIt, q){
+    if (knewIt){ state.score += 1; state.correctCount += 1; }
+    else { state.incorrectCount += 1; state.missed.push(q); }
     els.nextBtn.disabled = false;
-    save();
     renderQuiz();
   }
 
   function onNext(){
     state.pos += 1;
-    state.answeredThis = false;
+    state.answered = false;
     state.selection = null;
+    state.multiSelection = [];
     state.revealedOnly = false;
-    if (state.pos >= state.order.length){
-      state.finished = true;
+    if (state.pos >= state.questions.length){
       finish();
       return;
     }
-    save();
     renderQuiz();
   }
 
   function finish(){
-    save();
-    if (state.mode === "examen"){
-      var best = getBest();
-      if (state.score > best) setBest(state.score);
-    }
+    saveBest(state.key, state.correctCount, state.questions.length);
     renderSummary();
     showScreen("summary");
   }
 
   function renderSummary(){
-    var total = QUESTIONS.length;
+    var total = state.questions.length;
     var pct = Math.round((state.correctCount / total) * 100);
     els.summaryTitle.textContent = pct >= 80 ? "¡Excelente trabajo!" : pct >= 50 ? "¡Buen intento!" : "Sigamos practicando";
     els.summaryPct.textContent = pct + "%";
@@ -616,7 +941,8 @@
       els.missedWrap.classList.remove("hidden");
       state.missed.forEach(function(q){
         var li = document.createElement("li");
-        li.textContent = q.q + " → " + q.options[q.correct];
+        var ans = q.type === "fill" ? q.answer : (q.type === "multi" ? q.correct.map(function(i){return q.options[i];}).join(" · ") : q.options[q.correct]);
+        li.textContent = "S" + q.week + " — " + q.q + " → " + ans;
         els.missedList.appendChild(li);
       });
     }
@@ -667,52 +993,33 @@
     tick();
   }
 
-  function startQuiz(mode){
-    state = freshState(mode);
-    save();
-    showScreen("quiz");
-    renderQuiz();
+  function goHome(){
+    state = null;
+    renderHome();
+    showScreen("home");
   }
 
-  function resumeIfAny(){
-    var saved = load();
-    if (saved && !saved.finished){
-      state = saved;
-      showScreen("quiz");
-      renderQuiz();
-      return true;
-    }
-    return false;
-  }
-
-  els.btnEstudio.addEventListener("click", function(){ pendingMode = "estudio"; renderMode(); });
-  els.btnExamen.addEventListener("click", function(){ pendingMode = "examen"; renderMode(); });
-  els.startBtn.addEventListener("click", function(){ startQuiz(pendingMode); });
+  // ---------------------------------------------------------------------
+  // Wiring
+  // ---------------------------------------------------------------------
+  els.generalBtn.addEventListener("click", function(){ startSession("general"); });
+  els.finalTotalBtn.addEventListener("click", function(){ startSession("finalTotal"); });
   els.showAnswerBtn.addEventListener("click", onShowAnswer);
   els.nextBtn.addEventListener("click", onNext);
-  els.resetBtn.addEventListener("click", function(){
-    clearSave();
-    state = null;
-    pendingMode = "estudio";
-    renderMode();
-    showScreen("mode");
-    renderStatRail();
-  });
-  els.changeModeBtn.addEventListener("click", function(){
-    clearSave();
-    state = null;
-    renderMode();
-    showScreen("mode");
-    renderStatRail();
-  });
+  els.backBtn.addEventListener("click", goHome);
+  els.homeBtn.addEventListener("click", goHome);
   els.retryBtn.addEventListener("click", function(){
-    startQuiz(state.mode);
+    var mode = state.mode, weekId = state.mode === "week" ? state.questions[0].week : null;
+    startSession(mode, weekId);
+  });
+  els.resetBtn.addEventListener("click", function(){
+    if (window.confirm("¿Reiniciar todo el progreso guardado (mejores puntajes de todas las semanas)?")){
+      clearAll();
+      renderHome();
+    }
   });
 
-  if (!resumeIfAny()){
-    renderMode();
-    showScreen("mode");
-  }
-  renderStatRail();
+  renderHome();
+  showScreen("home");
 })();
 </script>
